@@ -20,7 +20,7 @@ export default function DashboardPage() {
 
   return (
     <div className="mt-12 grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-8">
-      {thumbnails?.map((thumbnail) => {
+      {sortedThumbnails?.map((thumbnail) => {
         return (
           <Card key={thumbnail._id}>
             <CardHeader className="items-center">

@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/use-toast";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { getImageUrl } from "@/lib/utils";
+import { useSession } from "@clerk/clerk-react";
 
 const defaultErrorState = {
   title: "",
@@ -27,6 +28,7 @@ export default function CreatePage() {
   const [errors, setErrors] = useState(defaultErrorState);
   const { toast } = useToast();
   const router = useRouter();
+  const session = useSession();
 
   return (
     <div className="mt-16">
@@ -81,6 +83,7 @@ export default function CreatePage() {
             title: title,
             aImage: imageA,
             bImage: imageB,
+            profileImage: session.session?.user.imageUrl,
           });
 
           router.push(`/thumbnails/${thumbnailId}`);
