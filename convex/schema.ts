@@ -8,6 +8,9 @@ export default defineSchema({
     title: v.string(),
     userId: v.string(),
     aImage: v.string(),
+    aVotes: v.number(),
     bImage: v.string(),
+    bVotes: v.number(),
+    voteIds: v.array(v.string()),
   }),
 });
