@@ -13,6 +13,7 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { getImageUrl } from "@/lib/utils";
 import { useSession } from "@clerk/clerk-react";
+import { UpgradeButton } from "@/components/upgrade-button";
 
 const defaultErrorState = {
   title: "",
@@ -79,14 +80,26 @@ export default function CreatePage() {
             return;
           }
 
-          const thumbnailId = await createThumbnail({
-            title: title,
-            aImage: imageA,
-            bImage: imageB,
-            profileImage: session.session?.user.imageUrl,
-          });
+          try {
+            const thumbnailId = await createThumbnail({
+              title: title,
+              aImage: imageA,
+              bImage: imageB,
+              profileImage: session.session?.user.imageUrl,
+            });
 
-          router.push(`/thumbnails/${thumbnailId}`);
+            router.push(`/thumbnails/${thumbnailId}`);
+          } catch (err) {
+            toast({
+              title: "You ran out of free credits",
+              description: (
+                <div>
+                  <UpgradeButton /> to create more thumbnail tests
+                </div>
+              ),
+              variant: "destructive",
+            });
+          }
         }}
       >
         <div className="flex flex-col gap-4 mb-8">
