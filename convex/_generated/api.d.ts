@@ -19,6 +19,7 @@ import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as stripe from "../stripe.js";
 import type * as thumbnails from "../thumbnails.js";
+import type * as trades from "../trades.js";
 import type * as users from "../users.js";
 import type * as util from "../util.js";
 
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   stripe: typeof stripe;
   thumbnails: typeof thumbnails;
+  trades: typeof trades;
   users: typeof users;
   util: typeof util;
 }>;

@@ -31,5 +31,24 @@ export default defineSchema({
     credits: v.number(),
   })
     .index('by_userId', ['userId'])
-    .index('by_subscriptionId', ['subscriptionId'])
+    .index('by_subscriptionId', ['subscriptionId']),
+
+  trades: defineTable({
+    userId: v.string(),
+    tradeDate: v.optional(v.string()),
+    ticker: v.optional(v.string()),
+    pnl: v.optional(v.number()),
+    description: v.optional(v.string()),
+    imageId: v.string(),
+    texts: v.optional(v.array(
+      v.object({
+        id: v.string(),
+        stickerNum: v.number(),
+        stickerId: v.number(),
+        x: v.number(),
+        y: v.number(),
+        text: v.optional(v.string()),
+      })
+    )),
+  })
 });
