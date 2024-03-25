@@ -31,6 +31,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useFieldArray, useForm } from "react-hook-form";
 import { Id } from "../../../convex/_generated/dataModel";
 import Link from "next/link";
+import { AlertButton } from "@/components/cancel-button";
 
 const defaultErrorState = {
   title: "",
@@ -63,7 +64,7 @@ export default function CreatePage() {
     ),
   });
 
-  const { register, control, handleSubmit } = useForm<
+  const { register, control, reset } = useForm<
     z.infer<typeof formSchema>,
     FieldValues
   >({
@@ -301,50 +302,10 @@ export default function CreatePage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <form id="trade-summary-form">
-                        <div className="mt-4">
-                          <Label htmlFor="tradeDate">Date</Label>
-                          <Input
-                            {...register(`tradeDate`)}
-                            id="tradeDate"
-                            type="datetime-local"
-                          />
-                        </div>
-                        <div className="flex gap-4 items-center mt-4">
-                          <div>
-                            <Label htmlFor="ticker">Ticker</Label>
-                            <Input
-                              {...register(`ticker`)}
-                              id="ticker"
-                              type="text"
-                              placeholder="e.g. SPY, NQ, BTC"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="pnl">Profit/Loss</Label>
-                            <Input
-                              {...register(`pnl`)}
-                              id="pnl"
-                              type="number"
-                              defaultValue="0"
-                            />
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            {...register(`description`)}
-                            id="description"
-                            placeholder="How did you feel during this trade? What did you learn?"
-                          />
-                        </div>
-                      </form>
-                    </CardContent>
-                    <CardFooter></CardFooter>
-                    <div className="flex gap-12 items-center justify-center mb-8">
-                      <Button variant={"secondary"}>Cancel</Button>
-                      <Button
-                        onClick={async () => {
+                      <form
+                        id="trade-summary-form"
+                        onSubmit={async (e) => {
+                          e.preventDefault();
                           const summaryForm = document.getElementById(
                             "trade-summary-form"
                           ) as HTMLFormElement;
@@ -390,10 +351,56 @@ export default function CreatePage() {
                             ),
                           });
                         }}
+                        onReset={() => {
+                          reset();
+                          reset({ texts: [] });
+                          setStickers([]);
+                          setImageA("");
+                        }}
                       >
-                        Save
-                      </Button>
-                    </div>
+                        <div className="mt-4">
+                          <Label htmlFor="tradeDate">Date</Label>
+                          <Input
+                            {...register(`tradeDate`)}
+                            id="tradeDate"
+                            type="datetime-local"
+                          />
+                        </div>
+                        <div className="flex gap-4 items-center mt-4">
+                          <div>
+                            <Label htmlFor="ticker">Ticker</Label>
+                            <Input
+                              {...register(`ticker`)}
+                              id="ticker"
+                              type="text"
+                              placeholder="e.g. SPY, NQ, BTC"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="pnl">Profit/Loss</Label>
+                            <Input
+                              {...register(`pnl`)}
+                              id="pnl"
+                              type="number"
+                              defaultValue="0"
+                            />
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            {...register(`description`)}
+                            id="description"
+                            placeholder="How did you feel during this trade? What did you learn?"
+                          />
+                        </div>
+                        <div className="flex gap-12 items-center justify-center mt-8">
+                          <AlertButton resetFunc={reset} />
+                          <Button type="submit">Save</Button>
+                        </div>
+                      </form>
+                    </CardContent>
+                    <CardFooter></CardFooter>
                   </Card>
                 </ScrollArea>
               </TabsContent>
