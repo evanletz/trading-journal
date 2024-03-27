@@ -32,6 +32,7 @@ import { FieldValues, useFieldArray, useForm } from "react-hook-form";
 import { Id } from "../../../convex/_generated/dataModel";
 import Link from "next/link";
 import { AlertButton } from "@/components/cancel-button";
+import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 
 const defaultErrorState = {
   title: "",
@@ -185,6 +186,8 @@ export default function CreatePage() {
     }) as string;
   } catch {}
 
+  const isSubscribed = useIsSubscribed();
+
   return (
     <div className="mt-16">
       <h1 className="text-4xl font-bold mb-8">New Trade Entry</h1>
@@ -193,19 +196,37 @@ export default function CreatePage() {
       </p>
 
       {!imageA && (
-        <div className="mb-8 border">
-          <UploadButton
-            uploadUrl={generateUploadUrl}
-            fileTypes={[".png", ".jpeg", ".jpg"]}
-            onUploadComplete={async (uploaded: UploadFileResponse[]) => {
-              setImageA((uploaded[0].response as any).storageId);
-            }}
-            onUploadError={(error: unknown) => {
-              // Do something with the error.
-              alert(`ERROR! ${error}`);
-            }}
-          />
-        </div>
+        <>
+          {!isSubscribed && (
+            <div className="flex items-center justify-center gap-2">
+              <UpgradeButton />
+              <p> to create a new trade entry!</p>
+            </div>
+          )}
+          {isSubscribed && (
+            <div className="mb-8 border">
+              <UploadButton
+                uploadUrl={generateUploadUrl}
+                fileTypes={[".png", ".jpeg", ".jpg"]}
+                onUploadComplete={async (uploaded: UploadFileResponse[]) => {
+                  setImageA((uploaded[0].response as any).storageId);
+                }}
+                onUploadError={(error: unknown) => {
+                  // Do something with the error.
+                  alert(`ERROR! ${error}`);
+                }}
+                onUploadBegin={() => {
+                  if (!isSubscribed) {
+                    toast({
+                      title: "You must be subscribed to create a new entry!",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              />
+            </div>
+          )}
+        </>
       )}
       {imageA && (
         <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-8">
@@ -304,6 +325,13 @@ export default function CreatePage() {
                         id="trade-summary-form"
                         onSubmit={async (e) => {
                           e.preventDefault();
+                          if (!isSubscribed) {
+                            toast({
+                              title:
+                                "You must be subscribed to create a new entry!",
+                              variant: "destructive",
+                            });
+                          }
                           const summaryForm = document.getElementById(
                             "trade-summary-form"
                           ) as HTMLFormElement;
