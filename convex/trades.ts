@@ -1,15 +1,15 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { getUserId } from "./util";
 import { getFullUser, isUserSubscribed } from "./users";
 
 export const createTrade = mutation({
     args: {
-        tradeDate: v.optional(v.string()),
+        tradeDate: v.string(),
         ticker: v.optional(v.string()),
-        pnl: v.optional(v.number()),
+        pnl: v.optional(v.float64()),
         description: v.optional(v.string()),
-        imageId: v.string(),
+        imageId: v.id('_storage'),
         texts: v.array(
           v.object({
             id: v.string(),
@@ -42,11 +42,48 @@ export const createTrade = mutation({
         return await ctx.db.insert('trades', {
             userId: userId,
             tradeDate: args.tradeDate,
-            ticker: args.ticker,
+            ticker: args.ticker?.toUpperCase(),
             pnl: args.pnl,
             description: args.description,
             imageId: args.imageId,
             texts: args.texts
         })
+    }
+})
+
+export const getEntry = query({
+    args: {entryId: v.id('trades')},
+    handler: async (ctx, args) => {
+        const entry = await ctx.db.get(args.entryId)
+        if (!entry) {
+            return null;
+        }
+
+        const isSubscribed = await isUserSubscribed(ctx)
+        if (!isSubscribed) {
+            throw new Error('You must be signed in to view this journal entry')
+        }
+
+        return entry
+    }
+})
+
+export const getEntriesForUser = query({
+    args: {},
+    handler: async(ctx, args) => {
+        const userId = await getUserId(ctx)
+        if (!userId) {
+            return [];
+        }
+
+        const entries = await ctx.db.query('trades').filter((q) => 
+            q.eq(q.field('userId'), userId))
+            .collect()
+        return Promise.all(
+            entries.map(async (entry) => ({
+                ...entry,
+                ...{imageUrl: await ctx.storage.getUrl(entry.imageId) || ""}
+            }))
+        )
     }
 })

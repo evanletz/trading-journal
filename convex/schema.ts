@@ -35,11 +35,11 @@ export default defineSchema({
 
   trades: defineTable({
     userId: v.string(),
-    tradeDate: v.optional(v.string()),
+    tradeDate: v.string(),
     ticker: v.optional(v.string()),
-    pnl: v.optional(v.number()),
+    pnl: v.optional(v.float64()),
     description: v.optional(v.string()),
-    imageId: v.string(),
+    imageId: v.id('_storage'),
     texts: v.optional(v.array(
       v.object({
         id: v.string(),

@@ -10,42 +10,79 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { getImageUrl } from "@/lib/utils";
 import Link from "next/link";
-import { formatDistance } from "date-fns";
+import { format } from "date-fns";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
+import { getImageUrls } from "../../../convex/files";
+import { groupByDate } from "@/lib/utils";
+import { TrendingDown, TrendingUp } from "lucide-react";
+
+type TradesWithImageUrl = {
+  _id: string;
+  userId: string;
+  tradeDate: string;
+  ticker: string;
+  pnl: number;
+  description: string;
+  imageId: string;
+  imageUrl: string;
+  texts: [];
+};
 
 export default function DashboardPage() {
   const thumbnails = useQuery(api.thumbnails.getThumbnailsForUser);
   const sortedThumbnails = [...(thumbnails ?? [])].reverse();
 
+  const entries = useQuery(api.trades.getEntriesForUser);
+  const entriesByDate = groupByDate(entries ?? []);
+
   return (
-    <div className="mt-12 grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-8">
-      {sortedThumbnails?.map((thumbnail) => {
+    <div>
+      {Object.entries(entriesByDate).map(([date, entries]) => {
         return (
-          <Card key={thumbnail._id}>
-            <CardHeader className="items-center">
-              <Image
-                src={getImageUrl(thumbnail.aImage)}
-                width="200"
-                height="200"
-                alt="thumbnail image"
-              />
-            </CardHeader>
-            <CardContent>
-              <p>{thumbnail.title}</p>
-              <p>
-                {formatDistance(new Date(thumbnail._creationTime), new Date(), {
-                  addSuffix: true,
-                })}
-              </p>
-              <p>Votes: {thumbnail.aVotes + thumbnail.bVotes}</p>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" asChild>
-                <Link href={`/thumbnails/${thumbnail._id}`}>View Results</Link>
-              </Button>
-            </CardFooter>
-          </Card>
+          <>
+            <h2 className="mt-12 text-3xl font-bold">
+              {format(date, "EEEE, MMMM do yyyy")}
+            </h2>
+            <div className="mt-8 grid md:grid-cols-3 sm:grid-cols-2 gap-8">
+              {entries?.map((entry: TradesWithImageUrl) => {
+                return (
+                  <Card key={entry._id}>
+                    <CardHeader className="items-center">
+                      <Image
+                        src={entry.imageUrl}
+                        width="300"
+                        height="300"
+                        alt="journal image"
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <p>{entry.ticker}</p>
+                      <div className="flex items-center gap-2">
+                        {entry.pnl && entry.pnl > 0 ? (
+                          <>
+                            <TrendingUp color="green" />
+                            <p>{entry.pnl}</p>
+                          </>
+                        ) : (
+                          <>
+                            <TrendingDown color="red" />
+                            <p>{entry.pnl}</p>
+                          </>
+                        )}
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button className="w-full" asChild>
+                        {/* <Link href={`/thumbnails/${thumbnail._id}`}>View Results</Link> */}
+                        <Link href={`/`}>View Trade</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+          </>
         );
       })}
     </div>

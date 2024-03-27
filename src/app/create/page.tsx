@@ -49,17 +49,17 @@ export default function CreatePage() {
   }
 
   const formSchema = z.object({
-    tradeDate: z.optional(z.string().datetime()),
-    ticker: z.optional(z.string().min(1).max(10)),
-    pnl: z.optional(z.coerce.number()),
-    description: z.optional(z.string().min(1).max(500)),
+    tradeDate: z.string().or(z.literal("")),
+    ticker: z.optional(z.string().min(0).max(10)),
+    pnl: z.optional(z.number()),
+    description: z.optional(z.string().min(0).max(500)),
     texts: z.array(
       z.object({
         stickerNum: z.number(),
         stickerId: z.number(),
         x: z.number(),
         y: z.number(),
-        text: z.optional(z.string().min(1).max(200)),
+        text: z.optional(z.string().min(0).max(200)),
       })
     ),
   });
@@ -178,9 +178,6 @@ export default function CreatePage() {
   const router = useRouter();
   const session = useSession();
 
-  const ticker = useRef("");
-  const description = useRef("");
-
   let imageUrl = "";
   try {
     imageUrl = useQuery(api.files.getImageUrls, {
@@ -278,6 +275,7 @@ export default function CreatePage() {
                                 <Textarea
                                   {...register(`texts.${index}.text`)}
                                   defaultValue={field.text}
+                                  maxLength={200}
                                   onChangeCapture={(e) => {
                                     field.text = e.currentTarget.value;
                                   }}
@@ -310,46 +308,64 @@ export default function CreatePage() {
                             "trade-summary-form"
                           ) as HTMLFormElement;
                           const formSummaryData = new FormData(summaryForm);
-                          // console.log(fields);
-                          try {
-                            const tradeId = await createTrade({
-                              tradeDate: formSummaryData.get(
-                                "tradeDate"
-                              ) as string,
-                              ticker: formSummaryData.get("ticker") as string,
-                              pnl: parseFloat(
-                                formSummaryData.get("pnl") as string
-                              ),
-                              description: formSummaryData.get(
-                                "description"
-                              ) as string,
-                              imageId: imageA,
-                              texts: fields,
-                            });
-                            router.push(`/dashboard`);
-                          } catch (err) {
+                          const values = Object.fromEntries(formSummaryData);
+                          // console.log({ ...values, texts: fields });
+                          const isFormValid = formSchema.safeParse({
+                            tradeDate: formSummaryData.get(
+                              "tradeDate"
+                            ) as string,
+                            ticker: formSummaryData.get("ticker") as string,
+                            pnl: parseFloat(
+                              formSummaryData.get("pnl") as string
+                            ),
+                            description: formSummaryData.get(
+                              "description"
+                            ) as string,
+                            imageId: imageA,
+                            texts: fields,
+                          });
+                          console.log(isFormValid);
+                          if (isFormValid.success) {
+                            try {
+                              const tradeId = await createTrade({
+                                tradeDate: formSummaryData.get(
+                                  "tradeDate"
+                                ) as string,
+                                ticker: formSummaryData.get("ticker") as string,
+                                pnl: parseFloat(
+                                  formSummaryData.get("pnl") as string
+                                ),
+                                description: formSummaryData.get(
+                                  "description"
+                                ) as string,
+                                imageId: imageA as Id<"_storage">,
+                                texts: fields,
+                              });
+                              router.push(`/dashboard`);
+                            } catch (err) {
+                              toast({
+                                title: "You ran out of journal entries",
+                                description: (
+                                  <div>
+                                    <UpgradeButton /> to journal more trades
+                                  </div>
+                                ),
+                                variant: "destructive",
+                              });
+                            }
                             toast({
-                              title: "You ran out of journal entries",
+                              title: "New trade created!",
                               description: (
                                 <div>
-                                  <UpgradeButton /> to journal more trades
+                                  <Button asChild>
+                                    <Link href="/create">
+                                      Create another entry
+                                    </Link>
+                                  </Button>
                                 </div>
                               ),
-                              variant: "destructive",
                             });
                           }
-                          toast({
-                            title: "New trade created!",
-                            description: (
-                              <div>
-                                <Button asChild>
-                                  <Link href="/create">
-                                    Create another entry
-                                  </Link>
-                                </Button>
-                              </div>
-                            ),
-                          });
                         }}
                         onReset={() => {
                           reset();
@@ -364,6 +380,7 @@ export default function CreatePage() {
                             {...register(`tradeDate`)}
                             id="tradeDate"
                             type="datetime-local"
+                            required
                           />
                         </div>
                         <div className="flex gap-4 items-center mt-4">
@@ -373,6 +390,7 @@ export default function CreatePage() {
                               {...register(`ticker`)}
                               id="ticker"
                               type="text"
+                              maxLength={10}
                               placeholder="e.g. SPY, NQ, BTC"
                             />
                           </div>
@@ -382,6 +400,7 @@ export default function CreatePage() {
                               {...register(`pnl`)}
                               id="pnl"
                               type="number"
+                              step="0.01"
                               defaultValue="0"
                             />
                           </div>
@@ -391,6 +410,7 @@ export default function CreatePage() {
                           <Textarea
                             {...register(`description`)}
                             id="description"
+                            maxLength={500}
                             placeholder="How did you feel during this trade? What did you learn?"
                           />
                         </div>
