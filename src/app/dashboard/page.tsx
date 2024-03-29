@@ -36,55 +36,69 @@ export default function DashboardPage() {
   const entries = useQuery(api.trades.getEntriesForUser);
   const entriesByDate = groupByDate(entries ?? []);
 
+  const currency = useQuery(api.users.getCurrency);
+
   return (
     <div>
-      {Object.entries(entriesByDate).map(([date, entries]) => {
-        return (
-          <>
-            <h2 className="mt-12 text-3xl font-bold">
-              {format(date, "EEEE, MMMM do yyyy")}
-            </h2>
-            <div className="mt-8 grid md:grid-cols-3 sm:grid-cols-2 gap-8">
-              {entries?.map((entry: TradesWithImageUrl) => {
-                return (
-                  <Card key={entry._id}>
-                    <CardHeader className="items-center">
-                      <Image
-                        src={entry.imageUrl}
-                        width="300"
-                        height="300"
-                        alt="journal image"
-                      />
-                    </CardHeader>
-                    <CardContent>
-                      <p>{entry.ticker}</p>
-                      <div className="flex items-center gap-2">
-                        {entry.pnl && entry.pnl > 0 ? (
-                          <>
-                            <TrendingUp color="green" />
-                            <p>{entry.pnl}</p>
-                          </>
-                        ) : (
-                          <>
-                            <TrendingDown color="red" />
-                            <p>{entry.pnl}</p>
-                          </>
-                        )}
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="w-full" asChild>
-                        {/* <Link href={`/thumbnails/${thumbnail._id}`}>View Results</Link> */}
-                        <Link href={`/`}>View Trade</Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                );
-              })}
-            </div>
-          </>
-        );
-      })}
+      {entries?.length == 0 && (
+        <div className="flex mt-12 text-xl items-center justify-center">
+          <p>Create a new journal entry to see your past trades here!</p>
+        </div>
+      )}
+      {entries &&
+        Object.entries(entriesByDate).map(([date, entries]) => {
+          return (
+            <>
+              <h2 className="mt-12 text-3xl font-bold">
+                {format(date, "EEEE, MMMM do yyyy")}
+              </h2>
+              <div className="mt-8 grid md:grid-cols-3 sm:grid-cols-2 gap-8">
+                {entries?.map((entry: TradesWithImageUrl) => {
+                  return (
+                    <Card key={entry._id}>
+                      <CardHeader className="items-center">
+                        <Image
+                          src={entry.imageUrl}
+                          width="300"
+                          height="300"
+                          alt="journal image"
+                        />
+                      </CardHeader>
+                      <CardContent>
+                        <p>{entry.ticker}</p>
+                        <div className="flex items-center gap-2">
+                          {entry.pnl && entry.pnl > 0 ? (
+                            <>
+                              <TrendingUp color="green" />
+                              <p>
+                                {currency}
+                                {entry.pnl}
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <TrendingDown color="red" />
+                              <p>
+                                {currency}
+                                {entry.pnl}
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      </CardContent>
+                      <CardFooter>
+                        <Button className="w-full" asChild>
+                          {/* <Link href={`/thumbnails/${thumbnail._id}`}>View Results</Link> */}
+                          <Link href={`/`}>View Trade</Link>
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
+              </div>
+            </>
+          );
+        })}
     </div>
   );
 }

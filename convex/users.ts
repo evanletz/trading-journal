@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { MutationCtx, QueryCtx, internalMutation, query } from "./_generated/server";
+import { MutationCtx, QueryCtx, internalMutation, mutation, query } from "./_generated/server";
 import { getUserId } from "./util";
 
 const FREE_CREDITS = 5
@@ -35,6 +35,7 @@ export const createUser = internalMutation({
             userId: args.userId,
             email: args.email,
             credits: FREE_CREDITS,
+            currency: '$',
         })
     }
 })
@@ -79,3 +80,31 @@ export function getFullUser(ctx: QueryCtx | MutationCtx, userId: string) {
         .withIndex('by_userId', (q) => q.eq('userId', userId))
         .first()
 }
+
+export const updateCurrency = mutation({
+    args: {
+        newCurrency: v.string()
+    },
+    handler: async (ctx, args) => {
+        const user = await getUser(ctx, args);
+        if (!user) {
+            throw new Error('no user found with that user ID')
+        }
+
+        await ctx.db.patch(user._id, {
+            currency: args.newCurrency
+        })
+    }
+})
+
+export const getCurrency = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const user = await getUser(ctx, args);
+        if (!user) {
+            throw new Error('No user found')
+        } else {
+            return user.currency
+        }
+    }
+})

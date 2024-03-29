@@ -10,6 +10,7 @@ import { ModeToggle } from "./mode-toggle";
 import Link from "next/link";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { UpgradeButton } from "./upgrade-button";
+import { SettingsMenu } from "./settings-menu";
 
 export function Header() {
   const isSubscribed = useIsSubscribed();
@@ -42,6 +43,7 @@ export function Header() {
         </div>
 
         <div className="flex gap-4 items-center">
+          <SettingsMenu />
           <SignedIn>
             {!isSubscribed && <UpgradeButton />}
             <UserButton />
@@ -49,7 +51,6 @@ export function Header() {
           <SignedOut>
             <SignInButton />
           </SignedOut>
-          <ModeToggle />
         </div>
       </div>
     </div>
