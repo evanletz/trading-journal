@@ -30,7 +30,7 @@ export const pay = action({
         userId: user.subject,
       },
       mode: "subscription",
-      success_url: `${domain}`,
+      success_url: `${domain}/create`,
       cancel_url: `${domain}`,
     });
 

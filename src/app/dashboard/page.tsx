@@ -65,25 +65,27 @@ export default function DashboardPage() {
                         />
                       </CardHeader>
                       <CardContent>
-                        <p>{entry.ticker}</p>
-                        <div className="flex items-center gap-2">
-                          {entry.pnl && entry.pnl > 0 ? (
-                            <>
-                              <TrendingUp color="green" />
-                              <p>
-                                {currency}
-                                {entry.pnl}
-                              </p>
-                            </>
-                          ) : (
-                            <>
-                              <TrendingDown color="red" />
-                              <p>
-                                {currency}
-                                {entry.pnl}
-                              </p>
-                            </>
-                          )}
+                        <div className="flex gap-2 items-center justify-center">
+                          <p>{entry.ticker}</p>
+                          <span className="flex items-center gap-2">
+                            {entry.pnl && entry.pnl > 0 ? (
+                              <>
+                                <TrendingUp color="green" />
+                                <p>
+                                  {currency}
+                                  {entry.pnl}
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <TrendingDown color="red" />
+                                <p>
+                                  {currency}
+                                  {entry.pnl}
+                                </p>
+                              </>
+                            )}
+                          </span>
                         </div>
                       </CardContent>
                       <CardFooter>

@@ -60,7 +60,7 @@ export function SettingsMenu() {
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
               <DropdownMenuItem
-                onClick={async () => {
+                onSelect={async () => {
                   updateCurrency({ newCurrency: "$" });
                 }}
               >
@@ -68,7 +68,7 @@ export function SettingsMenu() {
                 <span>Dollar</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={async () => {
+                onSelect={async () => {
                   updateCurrency({ newCurrency: "€" });
                 }}
               >
@@ -76,7 +76,7 @@ export function SettingsMenu() {
                 <span>Euro</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={async () => {
+                onSelect={async () => {
                   updateCurrency({ newCurrency: "£" });
                 }}
               >
@@ -84,7 +84,7 @@ export function SettingsMenu() {
                 <span>Pound</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={async () => {
+                onSelect={async () => {
                   updateCurrency({ newCurrency: "¥" });
                 }}
               >

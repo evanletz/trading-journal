@@ -1,8 +1,11 @@
 import { httpRouter } from "convex/server";
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
+import { Doc } from "./_generated/dataModel";
+import { useRouter } from "next/router";
 
 const http = httpRouter();
+const router = useRouter()
 
 http.route({
     path: '/stripe',
@@ -50,13 +53,21 @@ http.route({
                         userId: result.data.id,
                         email: result.data.email_addresses[0]?.email_address
                     })
+                    break
+                case "user.deleted":
+                    const id = result.data.id!
+                    await ctx.runMutation(internal.users.deleteUser, {
+                        userId: id
+                    })
+                    break
             }
 
             return new Response(null, {
                 status: 200
             })
+
         } catch (err) {
-            return new Response("Webhook Error", {
+            return new Response(err as string, {
                 status: 400
             })
         }

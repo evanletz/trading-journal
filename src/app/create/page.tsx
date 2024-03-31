@@ -3,15 +3,13 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { getImageUrl } from "@/lib/utils";
 import { useSession } from "@clerk/clerk-react";
 import { UpgradeButton } from "@/components/upgrade-button";
 import { CircleDollarSign, Trash2 } from "lucide-react";

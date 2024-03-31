@@ -40,6 +40,22 @@ export const createUser = internalMutation({
     }
 })
 
+export const deleteUser = internalMutation({
+    args: {userId: v.string()},
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query('users')
+            .withIndex('by_userId', (q) => q.eq('userId', args.userId))
+            .collect() // getting all records with that user id if many
+        if (!user) {
+            throw new Error('No user found to delete')
+        }
+        user.map(async (u) => {
+            await ctx.db.delete(u._id);
+        })
+    },
+})
+
 export const updateSubscription = internalMutation({
     args: {subscriptionId: v.string(), userId: v.string(), endsOn: v.number()},
     handler: async (ctx, args) => {
