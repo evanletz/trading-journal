@@ -2,10 +2,8 @@ import { httpRouter } from "convex/server";
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
-import { useRouter } from "next/router";
 
 const http = httpRouter();
-const router = useRouter()
 
 http.route({
     path: '/stripe',
