@@ -2,7 +2,6 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  // Other tables here...
 
   thumbnails: defineTable({
     title: v.string(),
@@ -30,6 +29,7 @@ export default defineSchema({
     endsOn: v.optional(v.number()),
     credits: v.number(),
     currency: v.string(),
+    modifiedTime: v.optional(v.number())
   })
     .index('by_userId', ['userId'])
     .index('by_subscriptionId', ['subscriptionId']),
@@ -51,5 +51,6 @@ export default defineSchema({
         text: v.optional(v.string()),
       })
     )),
+    modifiedTime: v.optional(v.number())
   })
 });

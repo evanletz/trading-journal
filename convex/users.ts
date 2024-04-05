@@ -67,7 +67,8 @@ export const updateSubscription = internalMutation({
 
         await ctx.db.patch(user._id, {
             subscriptionId: args.subscriptionId,
-            endsOn: args.endsOn
+            endsOn: args.endsOn,
+            modifiedTime: Date.now(),
         })
     }
 })
@@ -85,7 +86,8 @@ export const updateSubscriptionBySubId = internalMutation({
         }
 
         await ctx.db.patch(user._id, {
-            endsOn: args.endsOn
+            endsOn: args.endsOn,
+            modifiedTime: Date.now(),
         })
     }
 })
@@ -108,7 +110,8 @@ export const updateCurrency = mutation({
         }
 
         await ctx.db.patch(user._id, {
-            currency: args.newCurrency
+            currency: args.newCurrency,
+            modifiedTime: Date.now(),
         })
     }
 })

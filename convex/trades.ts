@@ -86,8 +86,8 @@ export const updateTrade = mutation({
             ticker: args.ticker,
             pnl: args.pnl,
             description: args.description,
-            // imageId: args.imageId,
-            texts: args.texts
+            texts: args.texts,
+            modifiedTime: Date.now(),
         })
     }
 })
