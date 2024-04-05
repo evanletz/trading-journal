@@ -11,7 +11,7 @@ import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { getImageUrls } from "../../../convex/files";
 import { groupByDate } from "@/lib/utils";
@@ -30,9 +30,6 @@ type TradesWithImageUrl = {
 };
 
 export default function DashboardPage() {
-  const thumbnails = useQuery(api.thumbnails.getThumbnailsForUser);
-  const sortedThumbnails = [...(thumbnails ?? [])].reverse();
-
   const entries = useQuery(api.trades.getEntriesForUser);
   const entriesByDate = groupByDate(entries ?? []);
 
@@ -50,7 +47,7 @@ export default function DashboardPage() {
           return (
             <>
               <h2 className="mt-12 text-3xl font-bold">
-                {format(date, "EEEE, MMMM do yyyy")}
+                {format(parseISO(date), "EEEE, MMMM do yyyy")}
               </h2>
               <div className="mt-8 grid md:grid-cols-3 sm:grid-cols-2 gap-8">
                 {entries?.map((entry: TradesWithImageUrl) => {
