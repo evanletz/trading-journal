@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import { Info, Trash2 } from "lucide-react";
@@ -25,10 +27,11 @@ import { useRouter } from "next/navigation";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { Id } from "../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 
 type ImageEditorProps = {
   image: string;
+  trade?: Doc<"trades">;
 };
 
 export const ImageEditor = (props: ImageEditorProps) => {
@@ -62,11 +65,11 @@ export const ImageEditor = (props: ImageEditorProps) => {
   >({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      tradeDate: undefined,
-      ticker: undefined,
-      pnl: undefined,
-      description: undefined,
-      texts: [],
+      tradeDate: props.trade?.tradeDate,
+      ticker: props.trade?.ticker,
+      pnl: props.trade?.pnl || 0,
+      description: props.trade?.description,
+      texts: props.trade?.texts,
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -81,8 +84,8 @@ export const ImageEditor = (props: ImageEditorProps) => {
     offsetX: number;
     offsetY: number;
   } | null>(null);
-  const [stickerNum, setStickerNum] = useState<number>(1);
-  const [stickers, setStickers] = useState<Sticker[]>([]);
+  const [stickerNum, setStickerNum] = useState<number>(0);
+  const [stickers, setStickers] = useState<Sticker[]>(props.trade?.texts || []);
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     const rect = document.body.getBoundingClientRect();
@@ -161,7 +164,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
   const { toast } = useToast();
   const router = useRouter();
   const isSubscribed = useIsSubscribed();
+  const currency = useQuery(api.users.getCurrency);
   const createTrade = useMutation(api.trades.createTrade);
+  const updateTrade = useMutation(api.trades.updateTrade);
 
   const [imageA, setImageA] = useState(props.image);
   const imageUrl = useQuery(api.files.getImageUrls, {
@@ -229,7 +234,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                               }}
                             />
                           </div>
-                          <div key={field.id} className="w-full">
+                          <div className="w-full">
                             <Textarea
                               {...register(`texts.${index}.text`)}
                               defaultValue={field.text}
@@ -237,6 +242,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                               onChangeCapture={(e) => {
                                 field.text = e.currentTarget.value;
                               }}
+                              key={field.id}
                             />
                           </div>
                         </div>
@@ -272,8 +278,6 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         "trade-summary-form"
                       ) as HTMLFormElement;
                       const formSummaryData = new FormData(summaryForm);
-                      const values = Object.fromEntries(formSummaryData);
-                      // console.log({ ...values, texts: fields });
                       const isFormValid = formSchema.safeParse({
                         tradeDate: formSummaryData.get("tradeDate") as string,
                         ticker: formSummaryData.get("ticker") as string,
@@ -284,10 +288,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         imageId: imageA,
                         texts: fields,
                       });
-                      console.log(isFormValid);
                       if (isFormValid.success) {
                         try {
-                          const tradeId = await createTrade({
+                          const formData = {
                             tradeDate: formSummaryData.get(
                               "tradeDate"
                             ) as string,
@@ -300,7 +303,41 @@ export const ImageEditor = (props: ImageEditorProps) => {
                             ) as string,
                             imageId: imageA as Id<"_storage">,
                             texts: fields,
-                          });
+                          };
+                          if (props.trade?._id) {
+                            console.log("updating", props.trade._id);
+                            const tradeId = await updateTrade({
+                              ...{ tradeId: props.trade._id },
+                              ...formData,
+                            });
+                            toast({
+                              title: "Trade entry updated!",
+                              description: (
+                                <div>
+                                  <Button asChild>
+                                    <Link href="/create">
+                                      Create another entry
+                                    </Link>
+                                  </Button>
+                                </div>
+                              ),
+                            });
+                          } else {
+                            console.log("creating new trade");
+                            const tradeId = await createTrade(formData);
+                            toast({
+                              title: "New trade created!",
+                              description: (
+                                <div>
+                                  <Button asChild>
+                                    <Link href="/create">
+                                      Create another entry
+                                    </Link>
+                                  </Button>
+                                </div>
+                              ),
+                            });
+                          }
                           router.push(`/dashboard`);
                         } catch (err) {
                           toast({
@@ -313,16 +350,6 @@ export const ImageEditor = (props: ImageEditorProps) => {
                             variant: "destructive",
                           });
                         }
-                        toast({
-                          title: "New trade created!",
-                          description: (
-                            <div>
-                              <Button asChild>
-                                <Link href="/create">Create another entry</Link>
-                              </Button>
-                            </div>
-                          ),
-                        });
                       }
                     }}
                     onReset={() => {
@@ -353,13 +380,12 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="pnl">Profit/Loss</Label>
+                        <Label htmlFor="pnl">Profit/Loss ({currency})</Label>
                         <Input
                           {...register(`pnl`)}
                           id="pnl"
                           type="number"
                           step="0.01"
-                          defaultValue="0"
                         />
                       </div>
                     </div>
@@ -373,7 +399,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       />
                     </div>
                     <div className="flex gap-12 items-center justify-center mt-8">
-                      <AlertButton resetFunc={reset} />
+                      <AlertButton
+                        resetFunc={() => router.push("/dashboard")}
+                      />
                       <Button type="submit">Save</Button>
                     </div>
                   </form>

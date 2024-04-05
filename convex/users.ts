@@ -6,7 +6,7 @@ const FREE_CREDITS = 5
 
 export const getUser = query({
     args: {},
-    handler: async (ctx, args) => {
+    handler: async (ctx) => {
         const userId = await getUserId(ctx)
 
         if (!userId) {
@@ -118,7 +118,7 @@ export const getCurrency = query({
     handler: async (ctx, args) => {
         const user = await getUser(ctx, args);
         if (!user) {
-            throw new Error('No user found')
+            return ""
         } else {
             return user.currency
         }

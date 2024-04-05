@@ -90,8 +90,7 @@ export default function DashboardPage() {
                       </CardContent>
                       <CardFooter>
                         <Button className="w-full" asChild>
-                          {/* <Link href={`/thumbnails/${thumbnail._id}`}>View Results</Link> */}
-                          <Link href={`/`}>View Trade</Link>
+                          <Link href={`/trades/${entry._id}`}>View Trade</Link>
                         </Button>
                       </CardFooter>
                     </Card>

@@ -1,17 +1,11 @@
 "use client";
 
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
-import { useSession } from "@clerk/clerk-react";
 import { UpgradeButton } from "@/components/upgrade-button";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, useFieldArray, useForm } from "react-hook-form";
-import { Id } from "../../../convex/_generated/dataModel";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { ImageEditor } from "@/components/ui/image-editor";
 
@@ -22,150 +16,11 @@ const defaultErrorState = {
 };
 
 export default function CreatePage() {
-  interface Sticker {
-    stickerNum: number;
-    stickerId: number;
-    x: number;
-    y: number;
-    text?: string;
-  }
-
-  const formSchema = z.object({
-    tradeDate: z.string().or(z.literal("")),
-    ticker: z.optional(z.string().min(0).max(10)),
-    pnl: z.optional(z.number()),
-    description: z.optional(z.string().min(0).max(500)),
-    texts: z.array(
-      z.object({
-        stickerNum: z.number(),
-        stickerId: z.number(),
-        x: z.number(),
-        y: z.number(),
-        text: z.optional(z.string().min(0).max(200)),
-      })
-    ),
-  });
-
-  const { register, control, reset } = useForm<
-    z.infer<typeof formSchema>,
-    FieldValues
-  >({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      tradeDate: undefined,
-      ticker: undefined,
-      pnl: undefined,
-      description: undefined,
-      texts: [],
-    },
-  });
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "texts",
-  });
-
-  const [draggingStickerId, setDraggingStickerId] = useState<number | null>(
-    null
-  );
-  const [offset, setOffset] = useState<{
-    offsetX: number;
-    offsetY: number;
-  } | null>(null);
-  const [stickerNum, setStickerNum] = useState<number>(0);
-  const [stickers, setStickers] = useState<Sticker[]>([]);
-
-  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    const rect = document.body.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setStickerNum(stickerNum + 1);
-
-    const id = Date.now(); // Unique ID for the sticker
-    let newSticker = { stickerNum: stickerNum, stickerId: id };
-    append({ ...newSticker, ...{ x: x, y: y } });
-    setStickers([...stickers, { ...newSticker, ...{ x: x, y: y } }]);
-
-    console.log(fields);
-  };
-
-  const handleStickerMouseDown = (
-    id: number,
-    e: React.MouseEvent<SVGSVGElement>
-  ) => {
-    setDraggingStickerId(id);
-    const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-    setOffset({ offsetX, offsetY });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
-    if (draggingStickerId !== null && offset) {
-      const index = stickers.findIndex(
-        (sticker) => sticker.stickerId === draggingStickerId
-      );
-      if (index !== -1) {
-        const rect = document.body.getBoundingClientRect();
-        const imageRect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left - offset.offsetX;
-        // const x =
-        //   e.clientX - rect.left - offset.offsetX < imageRect.left
-        //     ? imageRect.left
-        //     : e.clientX > imageRect.right
-        //     ? imageRect.right
-        //     : e.clientX - rect.left - offset.offsetX;
-        const y = e.clientY - rect.top - offset.offsetY;
-        const updatedPositions = [...stickers];
-        updatedPositions[index] = { ...updatedPositions[index], x, y };
-        setStickers(updatedPositions);
-      }
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDraggingStickerId(null);
-    setOffset(null);
-  };
-
-  const handleStickerDelete = (id: number) => {
-    const updatedPositions = stickers.filter(
-      (sticker) => sticker.stickerId !== id
-    );
-    setStickers(updatedPositions);
-
-    // Reassign stickerNum to the remaining stickers
-    updatedPositions.map((sticker, index) => {
-      sticker.stickerNum = index;
-    });
-    setStickerNum(updatedPositions.length);
-
-    // Remove corresponding text input
-    const updatedStickerTexts = stickers.filter(
-      (text) => text.stickerId !== id
-    );
-    setStickers(updatedStickerTexts);
-
-    updatedStickerTexts.map((stickerText, index) => {
-      stickerText.stickerNum = index;
-    });
-  };
-
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-  const createThumbnail = useMutation(api.thumbnails.createThumbnail);
-  const createTrade = useMutation(api.trades.createTrade);
   const [imageA, setImageA] = useState("");
   const [imageB, setImageB] = useState("");
   const [errors, setErrors] = useState(defaultErrorState);
   const { toast } = useToast();
-  const router = useRouter();
-  const session = useSession();
-
-  let imageUrl = "";
-  try {
-    imageUrl = useQuery(api.files.getImageUrls, {
-      imageId: imageA as Id<"_storage">,
-    }) as string;
-  } catch {}
 
   const isSubscribed = useIsSubscribed();
 

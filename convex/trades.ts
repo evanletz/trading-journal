@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getUserId } from "./util";
-import { getFullUser, isUserSubscribed } from "./users";
+import { getFullUser, isUserSubscribed, getUser } from "./users";
 
 export const createTrade = mutation({
     args: {
@@ -46,6 +46,47 @@ export const createTrade = mutation({
             pnl: args.pnl,
             description: args.description,
             imageId: args.imageId,
+            texts: args.texts
+        })
+    }
+})
+
+export const updateTrade = mutation({
+    args: {
+        tradeId: v.id('trades'),
+        tradeDate: v.string(),
+        ticker: v.optional(v.string()),
+        pnl: v.optional(v.float64()),
+        description: v.optional(v.string()),
+        imageId: v.id('_storage'),
+        texts: v.array(
+          v.object({
+            id: v.string(),
+            stickerNum: v.number(),
+            stickerId: v.number(),
+            x: v.number(),
+            y: v.number(),
+            text: v.optional(v.string()),
+          })
+        ),
+      },
+    handler: async (ctx, args) => {
+        const user = await getUser(ctx, args)
+        const trade = await ctx.db.get(args.tradeId)
+        if (!trade) {
+            throw new Error('No trade found with that ID')
+        }
+        if (user?.userId !== trade?.userId) {
+            console.log(user, trade)
+            throw new Error('Not authorized to make updates to this record')
+        }
+
+        return await ctx.db.patch(trade._id, {
+            tradeDate: args.tradeDate,
+            ticker: args.ticker,
+            pnl: args.pnl,
+            description: args.description,
+            // imageId: args.imageId,
             texts: args.texts
         })
     }
