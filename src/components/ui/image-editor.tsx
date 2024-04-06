@@ -28,6 +28,7 @@ import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
+import clsx from "clsx";
 
 type ImageEditorProps = {
   image: string;
@@ -88,9 +89,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
   const [stickers, setStickers] = useState<Sticker[]>(props.trade?.texts || []);
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    const rect = document.body.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
     setStickerNum(stickerNum + 1);
 
     const id = Date.now(); // Unique ID for the sticker
@@ -103,6 +104,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
     id: number,
     e: React.MouseEvent<SVGSVGElement>
   ) => {
+    e.preventDefault(); // prevents the annoying highlighting
     setDraggingStickerId(id);
     const rect = e.currentTarget.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
@@ -111,23 +113,27 @@ export const ImageEditor = (props: ImageEditorProps) => {
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    e.preventDefault(); // prevents the annoying highlighting
+
     if (draggingStickerId !== null && offset) {
       const index = stickers.findIndex(
         (sticker) => sticker.stickerId === draggingStickerId
       );
       if (index !== -1) {
-        const rect = document.body.getBoundingClientRect();
-        const imageRect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left - offset.offsetX;
-        // const x =
-        //   e.clientX - rect.left - offset.offsetX < imageRect.left
-        //     ? imageRect.left
-        //     : e.clientX > imageRect.right
-        //     ? imageRect.right
-        //     : e.clientX - rect.left - offset.offsetX;
-        const y = e.clientY - rect.top - offset.offsetY;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left - offset.offsetX) / rect.width) * 100;
+        const y = ((e.clientY - rect.top - offset.offsetY) / rect.height) * 100;
         const updatedPositions = [...stickers];
-        updatedPositions[index] = { ...updatedPositions[index], x, y };
+        if (
+          e.clientX < rect.left ||
+          e.clientY < rect.top ||
+          e.clientX > rect.right ||
+          e.clientY > rect.bottom
+        ) {
+        } // do nothing if out of bounds
+        else {
+          updatedPositions[index] = { ...updatedPositions[index], x, y };
+        }
         setStickers(updatedPositions);
       }
     }
@@ -174,34 +180,34 @@ export const ImageEditor = (props: ImageEditorProps) => {
   }) as string;
 
   return (
-    <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-8">
-      <div
-        className="flex flex-col col-span-2 gap-4 rounded p-2 items-right justify-center border"
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      >
-        <div>
+    <div
+      className="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-8"
+      onMouseUp={handleMouseUp}
+    >
+      <div className="flex flex-col col-span-2 gap-4 rounded p-2 items-right justify-center border">
+        <div onMouseMove={handleMouseMove} style={{ position: "relative" }}>
           <Image
             src={imageUrl}
             width="1000"
             height="1000"
             alt="Uploaded Trade Image"
-            onClick={handleImageClick}
             style={{ cursor: "crosshair" }}
+            onClick={handleImageClick}
           />
+
+          {stickers.map(({ stickerId, x, y }) => (
+            <div
+              id={stickerId.toString()}
+              key={stickerId}
+              style={{ position: "absolute", left: `${x}%`, top: `${y}%` }}
+            >
+              <Info
+                style={{ cursor: "move", fill: "black" }}
+                onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
+              />
+            </div>
+          ))}
         </div>
-        {stickers.map(({ stickerId, x, y }) => (
-          <div
-            id={stickerId.toString()}
-            key={stickerId}
-            style={{ position: "absolute", left: x, top: y }}
-          >
-            <Info
-              style={{ cursor: "move", fill: "black" }}
-              onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
-            />
-          </div>
-        ))}
       </div>
       <div className="flex flex-col col-span-1 gap-4">
         <Tabs defaultValue="details" activationMode="manual">
