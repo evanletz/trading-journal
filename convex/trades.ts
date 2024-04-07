@@ -128,3 +128,20 @@ export const getEntriesForUser = query({
         )
     }
 })
+
+export const deleteEntry = mutation({
+    args: {tradeId: v.id("trades")},
+    handler: async (ctx, args) => {
+        const user = await getUser(ctx, args)
+        const trade = await ctx.db.get(args.tradeId)
+        if (!trade) {
+            throw new Error('No trade found with that ID')
+        }
+        if (user?.userId !== trade?.userId) {
+            console.log(user, trade)
+            throw new Error('Not authorized to make updates to this record')
+        }
+
+        return await ctx.db.delete(trade._id)
+    }
+})

@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -15,7 +15,8 @@ import { format, parseISO } from "date-fns";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { getImageUrls } from "../../../convex/files";
 import { groupByDate } from "@/lib/utils";
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { Trash2, TrendingDown, TrendingUp } from "lucide-react";
+import { DeleteButton } from "@/components/cancel-button";
 
 type TradesWithImageUrl = {
   _id: string;
@@ -34,6 +35,7 @@ export default function DashboardPage() {
   const entriesByDate = groupByDate(entries ?? []);
 
   const currency = useQuery(api.users.getCurrency);
+  const deleteFunc = useMutation(api.trades.deleteEntry);
 
   return (
     <div>
@@ -65,7 +67,7 @@ export default function DashboardPage() {
                         <div className="flex gap-2 items-center justify-center">
                           <p>{entry.ticker}</p>
                           <span className="flex items-center gap-2">
-                            {entry.pnl && entry.pnl > 0 ? (
+                            {entry.pnl > 0 && (
                               <>
                                 <TrendingUp color="green" />
                                 <p>
@@ -73,9 +75,18 @@ export default function DashboardPage() {
                                   {entry.pnl}
                                 </p>
                               </>
-                            ) : (
+                            )}
+                            {entry.pnl < 0 && (
                               <>
                                 <TrendingDown color="red" />
+                                <p>
+                                  {currency}
+                                  {entry.pnl}
+                                </p>
+                              </>
+                            )}
+                            {entry.pnl === 0 && (
+                              <>
                                 <p>
                                   {currency}
                                   {entry.pnl}
@@ -86,9 +97,17 @@ export default function DashboardPage() {
                         </div>
                       </CardContent>
                       <CardFooter>
-                        <Button className="w-full" asChild>
-                          <Link href={`/trades/${entry._id}`}>View Trade</Link>
-                        </Button>
+                        <div className="flex gap-4 w-full">
+                          <Button className="flex-1" asChild>
+                            <Link href={`/trades/${entry._id}`}>
+                              View Trade
+                            </Link>
+                          </Button>
+                          <DeleteButton
+                            deleteFunc={deleteFunc}
+                            args={{ tradeId: entry._id as Id<"trades"> }}
+                          />
+                        </div>
                       </CardFooter>
                     </Card>
                   );
