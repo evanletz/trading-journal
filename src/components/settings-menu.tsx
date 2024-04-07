@@ -21,9 +21,11 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { api } from "../../convex/_generated/api";
+import { useToast } from "./ui/use-toast";
 
 export function SettingsMenu() {
   const { setTheme } = useTheme();
+  const { toast } = useToast();
   const updateCurrency = useMutation(api.users.updateCurrency);
 
   return (
@@ -62,6 +64,9 @@ export function SettingsMenu() {
               <DropdownMenuItem
                 onSelect={async () => {
                   updateCurrency({ newCurrency: "$" });
+                  toast({
+                    title: `Default currency changed to $!`,
+                  });
                 }}
               >
                 <DollarSign className="mr-2 h-4 w-4" />
@@ -70,6 +75,9 @@ export function SettingsMenu() {
               <DropdownMenuItem
                 onSelect={async () => {
                   updateCurrency({ newCurrency: "€" });
+                  toast({
+                    title: `Default currency changed to €!`,
+                  });
                 }}
               >
                 <Euro className="mr-2 h-4 w-4" />
@@ -78,6 +86,9 @@ export function SettingsMenu() {
               <DropdownMenuItem
                 onSelect={async () => {
                   updateCurrency({ newCurrency: "£" });
+                  toast({
+                    title: `Default currency changed to £!`,
+                  });
                 }}
               >
                 <PoundSterling className="mr-2 h-4 w-4" />
@@ -86,6 +97,9 @@ export function SettingsMenu() {
               <DropdownMenuItem
                 onSelect={async () => {
                   updateCurrency({ newCurrency: "¥" });
+                  toast({
+                    title: `Default currency changed to ¥!`,
+                  });
                 }}
               >
                 <JapaneseYen className="mr-2 h-4 w-4" />
