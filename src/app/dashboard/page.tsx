@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -31,8 +31,18 @@ type TradesWithImageUrl = {
 };
 
 export default function DashboardPage() {
-  const entries = useQuery(api.trades.getEntriesForUser);
+  const {
+    results: entries,
+    status,
+    loadMore,
+  } = usePaginatedQuery(
+    api.trades.getEntriesForUser,
+    {},
+    { initialNumItems: 15 }
+  );
+  // const entries = useQuery(api.trades.getEntriesForUser);
   const entriesByDate = groupByDate(entries ?? []);
+  console.log(entriesByDate);
 
   const currency = useQuery(api.users.getCurrency);
   const deleteFunc = useMutation(api.trades.deleteEntry);
@@ -116,6 +126,13 @@ export default function DashboardPage() {
             </>
           );
         })}
+      {status === "CanLoadMore" && (
+        <div className="w-full mt-8 mb-16 flex flex-col items-center">
+          <Button size={"lg"} onClick={() => loadMore(15)}>
+            Load More
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

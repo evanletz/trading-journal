@@ -41,6 +41,7 @@ export default defineSchema({
     pnl: v.optional(v.float64()),
     description: v.optional(v.string()),
     imageId: v.id('_storage'),
+    imageUrl: v.string(),
     texts: v.optional(v.array(
       v.object({
         id: v.string(),
@@ -53,4 +54,5 @@ export default defineSchema({
     )),
     modifiedTime: v.optional(v.number())
   })
+    .index('by_tradeDate', ['tradeDate'])
 });

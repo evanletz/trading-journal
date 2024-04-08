@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getUserId } from "./util";
 import { getFullUser, isUserSubscribed, getUser } from "./users";
+import { paginationOptsValidator } from "convex/server";
 
 export const createTrade = mutation({
     args: {
@@ -35,6 +36,9 @@ export const createTrade = mutation({
         if (!isSubscribed && user.credits <= 0) {
             throw new Error('You must be subscribed to create a new trade')
         }
+
+        const imageUrl = await ctx.storage.getUrl(args.imageId)
+
         await ctx.db.patch(user._id, {
             credits: Math.max(0, user.credits - 1)
         })
@@ -46,6 +50,7 @@ export const createTrade = mutation({
             pnl: args.pnl,
             description: args.description,
             imageId: args.imageId,
+            imageUrl: imageUrl || "",
             texts: args.texts
         })
     }
@@ -110,22 +115,19 @@ export const getEntry = query({
 })
 
 export const getEntriesForUser = query({
-    args: {},
-    handler: async(ctx, args) => {
+    args: { paginationOpts: paginationOptsValidator },
+    handler: async (ctx, args) => {
         const userId = await getUserId(ctx)
         if (!userId) {
-            return [];
+            throw new Error('No user found');
         }
 
-        const entries = await ctx.db.query('trades').filter((q) => 
+        return await ctx.db.query('trades')
+            .withIndex('by_tradeDate')
+            .filter((q) => 
             q.eq(q.field('userId'), userId))
-            .collect()
-        return Promise.all(
-            entries.map(async (entry) => ({
-                ...entry,
-                ...{imageUrl: await ctx.storage.getUrl(entry.imageId) || ""}
-            }))
-        )
+            .order('desc')
+            .paginate(args.paginationOpts)
     }
 })
 
