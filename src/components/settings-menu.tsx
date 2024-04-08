@@ -31,7 +31,7 @@ export function SettingsMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Settings className="mr-2 h-6 w-6" strokeWidth={1} />
+        <Settings className="mr-2 h-6 w-6" strokeWidth={2} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuSub>
