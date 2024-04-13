@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { UpgradeButton } from "@/components/upgrade-button";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { ImageEditor } from "@/components/ui/image-editor";
+import { Badge } from "@/components/ui/badge";
 
 const defaultErrorState = {
   title: "",
@@ -23,6 +24,7 @@ export default function CreatePage() {
   const { toast } = useToast();
 
   const isSubscribed = useIsSubscribed();
+  const credits = useQuery(api.users.getCredits);
 
   return (
     <div className="mt-16">
@@ -65,6 +67,11 @@ export default function CreatePage() {
         </>
       )}
       {imageA && <ImageEditor image={imageA} />}
+      {credits && (
+        <div className="flex justify-end">
+          <Badge variant="outline">{credits} / 500 new trades remaining</Badge>
+        </div>
+      )}
 
       {/* <h1 className="text-4xl font-bold mb-8">Create a Thumbnail Test</h1>
 

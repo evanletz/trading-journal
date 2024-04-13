@@ -33,8 +33,11 @@ export const createTrade = mutation({
         if (!user) {
             throw new Error('No user with that ID found')
         }
-        if (!isSubscribed && user.credits <= 0) {
+        if (!isSubscribed) {
             throw new Error('You must be subscribed to create a new trade')
+        }
+        if (user.credits <= 0) {
+            throw new Error('You ran out of credits! Upgrade to create a new trade.')
         }
 
         const imageUrl = await ctx.storage.getUrl(args.imageId)

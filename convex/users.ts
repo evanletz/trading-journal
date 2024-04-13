@@ -2,7 +2,8 @@ import { v } from "convex/values";
 import { MutationCtx, QueryCtx, internalMutation, mutation, query } from "./_generated/server";
 import { getUserId } from "./util";
 
-const FREE_CREDITS = 5
+const FREE_CREDITS = 1
+const PAID_CREDITS = 500
 
 export const getUser = query({
     args: {},
@@ -68,6 +69,7 @@ export const updateSubscription = internalMutation({
         await ctx.db.patch(user._id, {
             subscriptionId: args.subscriptionId,
             endsOn: args.endsOn,
+            credits: PAID_CREDITS,
             modifiedTime: Date.now(),
         })
     }
@@ -124,6 +126,18 @@ export const getCurrency = query({
             return ""
         } else {
             return user.currency
+        }
+    }
+})
+
+export const getCredits = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const user = await getUser(ctx, args);
+        if (!user) {
+            return undefined
+        } else {
+            return user.credits.toString()
         }
     }
 })
