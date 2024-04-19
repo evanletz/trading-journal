@@ -13,6 +13,7 @@ import { SettingsMenu } from "./settings-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@radix-ui/react-navigation-menu";
 import { navigationMenuTriggerStyle } from "./ui/navigation-menu";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export function Header() {
   const isSubscribed = useIsSubscribed();
@@ -20,7 +21,15 @@ export function Header() {
   return (
     <div className="border-b">
       <div className="h-16 container flex justify-between items-center">
-        <Link href="/">Trading Journal</Link>
+        <div className="w-48 justify-start">
+          <div className="hidden dark:block">
+            <Link href="/"><Image src="/TradeTrenderLogo-light.png" alt="Trade Trender Logo" width="210" height="70"></Image></Link>
+          </div>
+          <div className="block dark:hidden">
+            <Link href="/"><Image src="/TradeTrenderLogo-dark.png" alt="Trade Trender Logo" width="210" height="70"></Image></Link>
+          </div>
+        </div>
+        
 
           <NavigationMenu>
             <SignedIn>
@@ -43,7 +52,7 @@ export function Header() {
             </SignedIn>
           </NavigationMenu>
 
-        <div className="flex gap-4 items-center">
+        <div className="w-48 justify-end flex gap-4 items-center">
           <SignedIn>
             <SettingsMenu />
             {!isSubscribed && <UpgradeButton />}
