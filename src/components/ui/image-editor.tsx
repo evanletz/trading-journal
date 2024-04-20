@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { Info, Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
-import { ScrollArea } from "./scroll-area";
 import {
   Card,
   CardContent,
@@ -28,7 +27,6 @@ import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
-import clsx from "clsx";
 
 type ImageEditorProps = {
   image: string;
@@ -90,8 +88,8 @@ export const ImageEditor = (props: ImageEditorProps) => {
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const x = ((e.clientX - rect.left) / rect.width) * 100 - 2;
+    const y = ((e.clientY - rect.top) / rect.height) * 100 - 3;
     setStickerNum(stickerNum + 1);
 
     const id = Date.now(); // Unique ID for the sticker
@@ -181,10 +179,13 @@ export const ImageEditor = (props: ImageEditorProps) => {
 
   return (
     <div
-      className="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-8"
+      className="flex flex-col grid md:grid-cols-3 sm:grid-cols-1 mb-8 items-center"
       onMouseUp={handleMouseUp}
     >
-      <div className="flex flex-col col-span-2 gap-4 rounded p-2 items-right justify-center border">
+      <div
+        className="md:col-span-2 grid-cols-1 gap-4 rounded p-2 items-right justify-center"
+        style={{ borderColor: "green" }}
+      >
         <div onMouseMove={handleMouseMove} style={{ position: "relative" }}>
           <Image
             src={imageUrl}
@@ -202,32 +203,48 @@ export const ImageEditor = (props: ImageEditorProps) => {
               style={{ position: "absolute", left: `${x}%`, top: `${y}%` }}
             >
               <Info
-                style={{ cursor: "move", fill: "black" }}
+                strokeWidth={3}
+                style={{
+                  cursor: "move",
+                  color: "black",
+                  fill: "white",
+                  border: "10",
+                  borderColor: "black",
+                }}
                 onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
               />
             </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-col col-span-1 gap-4">
-        <Tabs defaultValue="details" activationMode="manual">
+      <div
+        className="flex flex-col col-span-1 gap-4 w-full"
+      >
+        <Tabs
+          defaultValue="details"
+          activationMode="manual"
+          className="w-full border-b space-y-2 h-full"
+          style={{ position: "relative" }}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="summary">Summary</TabsTrigger>
           </TabsList>
-          <TabsContent value="details">
-            <ScrollArea className="h-96 w-full rounded-md border">
-              <Card>
+          <div className="overflow-y-auto border rounded border-slate-800 h-full">
+            <TabsContent value="details" className="w-full h-96">
+              <Card className="border-none">
                 <CardHeader>
                   <CardTitle>Details</CardTitle>
-                  <CardDescription>Create your trade's story.</CardDescription>
+                  <CardDescription>
+                    Click the image to create your trade's story.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <form id="trade-details-form">
                     {fields.map((field, index) => (
                       <>
-                        <div className="flex gap-4 space-y-5">
-                          <div className="space-y-2">
+                        <div className="flex gap-4 space-y-5 items-center">
+                          <div className="flex-col space-y-2 text-center">
                             <label>{index + 1}</label>
                             <Trash2
                               style={{
@@ -257,15 +274,13 @@ export const ImageEditor = (props: ImageEditorProps) => {
                   </form>
                 </CardContent>
               </Card>
-            </ScrollArea>
-          </TabsContent>
-          <TabsContent value="summary">
-            <ScrollArea className="h-96 w-full rounded-md border">
-              <Card>
+            </TabsContent>
+            <TabsContent value="summary" className="w-full h-96">
+              <Card className="border-none">
                 <CardHeader>
                   <CardTitle>Summary</CardTitle>
                   <CardDescription>
-                    Save some information about your trade.
+                    Enter some information about your trade. Click the 'Save' button below to finish.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -275,8 +290,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       e.preventDefault();
                       if (!isSubscribed) {
                         toast({
-                          title:
-                            "You must be subscribed to create a new entry!",
+                          title: "You must be subscribed to create a new entry!",
                           variant: "destructive",
                         });
                       }
@@ -288,22 +302,16 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         tradeDate: formSummaryData.get("tradeDate") as string,
                         ticker: formSummaryData.get("ticker") as string,
                         pnl: parseFloat(formSummaryData.get("pnl") as string),
-                        description: formSummaryData.get(
-                          "description"
-                        ) as string,
+                        description: formSummaryData.get("description") as string,
                         imageId: imageA,
                         texts: fields,
                       });
                       if (isFormValid.success) {
                         try {
                           const formData = {
-                            tradeDate: formSummaryData.get(
-                              "tradeDate"
-                            ) as string,
+                            tradeDate: formSummaryData.get("tradeDate") as string,
                             ticker: formSummaryData.get("ticker") as string,
-                            pnl: parseFloat(
-                              formSummaryData.get("pnl") as string
-                            ),
+                            pnl: parseFloat(formSummaryData.get("pnl") as string),
                             description: formSummaryData.get(
                               "description"
                             ) as string,
@@ -333,14 +341,10 @@ export const ImageEditor = (props: ImageEditorProps) => {
                             const tradeId = await createTrade(formData);
                             toast({
                               title: "New trade created!",
-                              description: (
-                                <div>
-                                  <Button asChild>
-                                    <Link href="/create">
-                                      Create another entry
-                                    </Link>
-                                  </Button>
-                                </div>
+                              action: (
+                                <Button asChild size={"sm"}>
+                                  <Link href="/create">Create another entry</Link>
+                                </Button>
                               ),
                             });
                           }
@@ -405,16 +409,14 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       />
                     </div>
                     <div className="flex gap-12 items-center justify-center mt-8">
-                      <AlertButton
-                        resetFunc={() => router.push("/dashboard")}
-                      />
+                      <AlertButton resetFunc={() => router.push("/dashboard")} />
                       <Button type="submit">Save</Button>
                     </div>
                   </form>
                 </CardContent>
               </Card>
-            </ScrollArea>
-          </TabsContent>
+            </TabsContent>
+          </div>
         </Tabs>
       </div>
     </div>
