@@ -5,7 +5,10 @@ import { api } from "../../../convex/_generated/api";
 import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { UpgradeButtonNew } from "@/components/upgrade-button";
+import {
+  UpgradeButtonExisting,
+  UpgradeButtonNew,
+} from "@/components/upgrade-button";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { ImageEditor } from "@/components/ui/image-editor";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +42,8 @@ export default function CreatePage() {
       badgeText = "1 FREE ENTRY REMAINING";
     } else if (profileType === "basic") {
       badgeText = `${credits.toString()} / 100 entries remaining`;
+    } else if (profileType === "unlimited") {
+      badgeText = "Enjoy unlimited entries!";
     }
   }
 
@@ -57,7 +62,15 @@ export default function CreatePage() {
               <p> to create a new trade entry!</p>
             </div>
           )}
-          {isSubscribed && (
+          {isSubscribed &&
+            user.profileType === "basic" &&
+            user.credits === 0 && (
+              <div className="flex items-center justify-center gap-2">
+                <UpgradeButtonExisting price_type="upgrade" />
+                <p> to create a new trade entry!</p>
+              </div>
+            )}
+          {isSubscribed && user.credits > 0 && (
             <div className="flex justify-center mb-8">
               <div className="flex justify-center border rounded w-48">
                 <UploadButton

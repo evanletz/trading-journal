@@ -8,15 +8,19 @@ import {
 } from "@clerk/clerk-react";
 import Link from "next/link";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
-import { UpgradeButtonExisting } from "./upgrade-button";
+import { UpgradeButtonExisting, UpgradeButtonNew } from "./upgrade-button";
 import { SettingsMenu } from "./settings-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@radix-ui/react-navigation-menu";
 import { navigationMenuTriggerStyle } from "./ui/navigation-menu";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { getUser } from "../../convex/util";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 export function Header() {
   const isSubscribed = useIsSubscribed();
+  const user = useQuery(api.users.getUser)
 
   return (
     <div className="border-b">
@@ -54,7 +58,12 @@ export function Header() {
 
         <div className="w-48 justify-end flex gap-4 items-center">
           <SignedIn>
-            <UpgradeButtonExisting price_type="upgrade"/>
+            {user && user.profileType === 'free' &&
+              <UpgradeButtonNew />
+            }
+            {user && user.profileType == 'basic' &&
+              <UpgradeButtonExisting price_type="upgrade"/>
+            }
             <SettingsMenu />
             <UserButton />
           </SignedIn>
