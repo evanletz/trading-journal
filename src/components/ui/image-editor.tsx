@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "./card";
 import { Textarea } from "./textarea";
-import { UpgradeButton } from "../upgrade-button";
+import { UpgradeButtonExisting } from "../upgrade-button";
 import { Button } from "./button";
 import Link from "next/link";
 import { Label } from "./label";
@@ -354,7 +354,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                             title: "You ran out of journal entries",
                             description: (
                               <div>
-                                <UpgradeButton /> to journal more trades
+                                <UpgradeButtonExisting /> to journal more trades
                               </div>
                             ),
                             variant: "destructive",
