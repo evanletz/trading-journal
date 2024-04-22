@@ -3,7 +3,8 @@ import { MutationCtx, QueryCtx, internalMutation, mutation, query } from "./_gen
 import { getUserId } from "./util";
 
 const FREE_CREDITS = 1
-const PAID_CREDITS = 500
+const BASIC_CREDITS = 100
+const UNLTD_CREDITS = 999999
 
 export const getUser = query({
     args: {},
@@ -58,7 +59,7 @@ export const deleteUser = internalMutation({
 })
 
 export const updateSubscription = internalMutation({
-    args: {subscriptionId: v.string(), userId: v.string(), endsOn: v.number()},
+    args: {subscriptionId: v.string(), userId: v.string(), endsOn: v.number(), price: v.number()},
     handler: async (ctx, args) => {
         const user = await getFullUser(ctx, args.userId);
 
@@ -66,10 +67,19 @@ export const updateSubscription = internalMutation({
             throw new Error('no user found with that user ID')
         }
 
+        let credits = 0
+        if (args.price === 2900) {
+            credits = BASIC_CREDITS
+        } else if (args.price === 4900 || args.price === 2000) {
+            credits = UNLTD_CREDITS
+        } else {
+            credits = 0
+        }
+
         await ctx.db.patch(user._id, {
             subscriptionId: args.subscriptionId,
             endsOn: args.endsOn,
-            credits: PAID_CREDITS,
+            credits: credits,
             modifiedTime: Date.now(),
         })
     }
@@ -137,7 +147,7 @@ export const getCredits = query({
         if (!user) {
             return undefined
         } else {
-            return user.credits.toString()
+            return user.credits
         }
     }
 })
