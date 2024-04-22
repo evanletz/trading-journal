@@ -2,14 +2,17 @@ import { v } from "convex/values";
 import { action, internalAction } from "./_generated/server";
 import Stripe from "stripe"
 import { internal } from "./_generated/api";
+import { httpRouter } from "convex/server";
+
+const http = httpRouter();
 
 type Metadata = {
     userId: string
 }
 
 export const pay = action({
-  args: {},
-  handler: async (ctx) => {
+  args: { price_type: v.string() },
+  handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity()
     if (!user) {
         throw new Error('you must be logged in to subscribe');
@@ -19,17 +22,28 @@ export const pay = action({
       throw new Error('you must have a verified email to subscribe')
     }
 
+    let price
+    if (args.price_type === 'basic') {
+      price = process.env.PRICE_BASIC_ID
+    } else if (args.price_type === 'unlimited') {
+      price = process.env.PRICE_UNLTD_ID
+    } else if (args.price_type === 'upgrade') {
+      price = process.env.PRICE_UPGRADE_ID
+    } else {
+      throw new Error('No product defined')
+    }
+
     const domain = process.env.HOSTING_URL ?? "http://localhost:3000";
     const stripe = new Stripe(process.env.STRIPE_KEY!, {
       apiVersion: "2023-10-16",
     });
     const session = await stripe.checkout.sessions.create({
-      line_items: [{price: process.env.PRICE_ID!, quantity: 1}],
+      line_items: [{price: price, quantity: 1}],
       customer_email: user.email,
       metadata: {
         userId: user.subject,
       },
-      mode: "subscription",
+      mode: "payment",
       success_url: `${domain}/create`,
       cancel_url: `${domain}`,
     });
@@ -57,16 +71,17 @@ export const fulfill = internalAction({
         metadata: Metadata;
       }
       if (event.type === "checkout.session.completed") {
-        const subscription = await stripe.subscriptions.retrieve(
-          completedEvent.subscription as string
-        )
+        if (completedEvent.payment_status === 'paid') {
+          console.log(completedEvent.amount_subtotal)
+        }
 
         const userId = completedEvent.metadata.userId;
 
         await ctx.runMutation(internal.users.updateSubscription, {
           userId,
-          subscriptionId: subscription.id,
-          endsOn: subscription.current_period_end * 1000
+          subscriptionId: completedEvent.payment_intent as string,
+          endsOn: 0,
+          price: completedEvent.amount_subtotal!
         })
       }
 

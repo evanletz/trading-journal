@@ -8,7 +8,7 @@ import {
 } from "@clerk/clerk-react";
 import Link from "next/link";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
-import { UpgradeButton } from "./upgrade-button";
+import { UpgradeButtonExisting } from "./upgrade-button";
 import { SettingsMenu } from "./settings-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@radix-ui/react-navigation-menu";
 import { navigationMenuTriggerStyle } from "./ui/navigation-menu";
@@ -54,8 +54,8 @@ export function Header() {
 
         <div className="w-48 justify-end flex gap-4 items-center">
           <SignedIn>
+            <UpgradeButtonExisting price_type="upgrade"/>
             <SettingsMenu />
-            {!isSubscribed && <UpgradeButton />}
             <UserButton />
           </SignedIn>
           <SignedOut>
@@ -63,7 +63,7 @@ export function Header() {
               <SignedOut>
                 <NavigationMenuList className="flex align-right">
                   <NavigationMenuItem>
-                    <Link href="/pricing" legacyBehavior passHref>
+                    <Link href="#pricing" legacyBehavior passHref>
                       <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                         Pricing
                       </NavigationMenuLink>

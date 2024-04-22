@@ -1,7 +1,6 @@
 import { httpRouter } from "convex/server";
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
-import { Doc } from "./_generated/dataModel";
 
 const http = httpRouter();
 
@@ -22,7 +21,8 @@ http.route({
             });
         } else {
             return new Response("Webhook Error", {
-                status: 400
+                status: 400,
+                statusText: result.error
             });
         }
     })

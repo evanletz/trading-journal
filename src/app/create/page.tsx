@@ -5,7 +5,7 @@ import { api } from "../../../convex/_generated/api";
 import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { UpgradeButton } from "@/components/upgrade-button";
+import { UpgradeButtonNew } from "@/components/upgrade-button";
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { ImageEditor } from "@/components/ui/image-editor";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +37,7 @@ export default function CreatePage() {
         <>
           {!isSubscribed && (
             <div className="flex items-center justify-center gap-2">
-              <UpgradeButton />
+              <UpgradeButtonNew />
               <p> to create a new trade entry!</p>
             </div>
           )}
@@ -71,7 +71,9 @@ export default function CreatePage() {
       {imageA && <ImageEditor image={imageA} />}
       {credits && (
         <div className="flex justify-end">
-          <Badge variant="outline">{credits} / 100 new trades remaining</Badge>
+          <Badge variant="outline">
+            {credits.toString()} / 100 new trades remaining
+          </Badge>
         </div>
       )}
     </div>
