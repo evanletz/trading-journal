@@ -24,7 +24,23 @@ export default function CreatePage() {
   const { toast } = useToast();
 
   const isSubscribed = useIsSubscribed();
-  const credits = useQuery(api.users.getCredits);
+  const user = useQuery(api.users.getUser);
+  if (!user) {
+    throw new Error("User not found!");
+  }
+  const credits = user?.credits;
+  const profileType = user?.profileType;
+
+  let badgeText = undefined;
+  if (credits) {
+    if (credits === 0) {
+      badgeText = "0 ENTRIES REMAINING";
+    } else if (profileType === "free" && credits === 1) {
+      badgeText = "1 FREE ENTRY REMAINING";
+    } else if (profileType === "basic") {
+      badgeText = `${credits.toString()} / 100 entries remaining`;
+    }
+  }
 
   return (
     <div className="mt-16">
@@ -69,11 +85,9 @@ export default function CreatePage() {
         </>
       )}
       {imageA && <ImageEditor image={imageA} />}
-      {credits && (
+      {credits > 0 && (
         <div className="flex justify-end">
-          <Badge variant="outline">
-            {credits.toString()} / 100 new trades remaining
-          </Badge>
+          <Badge variant="outline">{badgeText}</Badge>
         </div>
       )}
     </div>

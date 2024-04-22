@@ -27,7 +27,7 @@ export const isUserSubscribed = async (ctx: QueryCtx | MutationCtx) => {
 
     const userToCheck = await getFullUser(ctx, userId);
 
-    return (userToCheck?.endsOn ?? 0) > Date.now()
+    return (userToCheck?.credits ?? 0) > 0
 }
 
 export const createUser = internalMutation({
@@ -38,6 +38,7 @@ export const createUser = internalMutation({
             email: args.email,
             credits: FREE_CREDITS,
             currency: '$',
+            profileType: 'free'
         })
     }
 })
@@ -68,12 +69,16 @@ export const updateSubscription = internalMutation({
         }
 
         let credits = 0
+        let profileType = ''
         if (args.price === 2900) {
             credits = BASIC_CREDITS
+            profileType = 'basic'
         } else if (args.price === 4900 || args.price === 2000) {
             credits = UNLTD_CREDITS
+            profileType = 'unlimited'
         } else {
             credits = 0
+            profileType = ''
         }
 
         await ctx.db.patch(user._id, {
@@ -81,6 +86,7 @@ export const updateSubscription = internalMutation({
             endsOn: args.endsOn,
             credits: credits,
             modifiedTime: Date.now(),
+            profileType: profileType
         })
     }
 })

@@ -29,7 +29,8 @@ export default defineSchema({
     endsOn: v.optional(v.number()),
     credits: v.number(),
     currency: v.string(),
-    modifiedTime: v.optional(v.number())
+    modifiedTime: v.optional(v.number()),
+    profileType: v.string()
   })
     .index('by_userId', ['userId'])
     .index('by_subscriptionId', ['subscriptionId']),
