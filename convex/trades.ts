@@ -28,13 +28,9 @@ export const createTrade = mutation({
             return [];
         }
 
-        const isSubscribed = await isUserSubscribed(ctx)
         const user = await getFullUser(ctx, userId);
         if (!user) {
             throw new Error('No user with that ID found')
-        }
-        if (!isSubscribed) {
-            throw new Error('You must be subscribed to create a new trade')
         }
         if (user.credits <= 0) {
             throw new Error('You ran out of credits! Upgrade to create a new trade.')
@@ -85,7 +81,6 @@ export const updateTrade = mutation({
             throw new Error('No trade found with that ID')
         }
         if (user?.userId !== trade?.userId) {
-            console.log(user, trade)
             throw new Error('Not authorized to make updates to this record')
         }
 
@@ -103,14 +98,14 @@ export const updateTrade = mutation({
 export const getEntry = query({
     args: {entryId: v.id('trades')},
     handler: async (ctx, args) => {
+        const user = await getUser(ctx, args)
         const entry = await ctx.db.get(args.entryId)
         if (!entry) {
             return null;
         }
 
-        const isSubscribed = await isUserSubscribed(ctx)
-        if (!isSubscribed) {
-            throw new Error('You must be signed in to view this journal entry')
+        if (user?.userId !== entry?.userId) {
+            throw new Error('Not authorized to make updates to this record')
         }
 
         return entry

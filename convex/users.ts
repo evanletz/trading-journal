@@ -27,7 +27,7 @@ export const isUserSubscribed = async (ctx: QueryCtx | MutationCtx) => {
 
     const userToCheck = await getFullUser(ctx, userId);
 
-    return (userToCheck?.credits ?? 0) > 0
+    return Boolean(userToCheck && userToCheck.subscriptionId && userToCheck.credits > 0)
 }
 
 export const createUser = internalMutation({

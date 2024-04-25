@@ -7,7 +7,6 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import Link from "next/link";
-import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { UpgradeButtonExisting, UpgradeButtonNew } from "./upgrade-button";
 import { SettingsMenu } from "./settings-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@radix-ui/react-navigation-menu";
@@ -19,7 +18,6 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export function Header() {
-  const isSubscribed = useIsSubscribed();
   const user = useQuery(api.users.getUser)
 
   return (
