@@ -30,7 +30,8 @@ export default defineSchema({
     credits: v.number(),
     currency: v.string(),
     modifiedTime: v.optional(v.number()),
-    profileType: v.string()
+    profileType: v.string(),
+    secondarySubscriptionId: v.optional(v.string())
   })
     .index('by_userId', ['userId'])
     .index('by_subscriptionId', ['subscriptionId']),

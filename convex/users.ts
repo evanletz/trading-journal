@@ -86,7 +86,8 @@ export const updateSubscription = internalMutation({
             endsOn: args.endsOn,
             credits: credits,
             modifiedTime: Date.now(),
-            profileType: profileType
+            profileType: profileType,
+            secondarySubscriptionId: user.subscriptionId ?? undefined
         })
     }
 })
