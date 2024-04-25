@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Doc, Id } from "../../convex/_generated/dataModel";
+import Stripe from "stripe";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -33,4 +34,25 @@ export function groupByDate(entries: Doc<"trades">[]) {
       }, {}
     )
   return ordered
+}
+
+export async function confirmPayment(paymentIntent: string) {
+  // check if user subscribed by confirming payment intent is 'succeeded'
+  // also add profileType as second arg to check that price of payment
+  // intent matches up. if price is $20 then check secondary 
+  // payment intent field
+  if (paymentIntent === undefined) {
+    return false
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_KEY!, {
+    apiVersion: "2023-10-16",
+  });
+
+  try {
+    const confirmation = await stripe.paymentIntents.retrieve(paymentIntent)
+    return confirmation.status === 'succeeded'
+  } catch {
+    return false
+  }
 }
