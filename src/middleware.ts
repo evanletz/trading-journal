@@ -1,13 +1,18 @@
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
- 
-export default authMiddleware({
-    publicRoutes: ["/"],
-    afterAuth: async (auth, req) => {
-      // Nice try, you need to sign-in
-      if (!auth.userId && !auth.isPublicRoute) {
-        return redirectToSignIn({ returnBackUrl: req.url })
-      }
-    }
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+
+const isProtectedRoute = createRouteMatcher(
+  [
+    '/dashboard(.*)',
+    '/create(.*)',
+    '/trades/(.*)',
+  ]
+);
+
+export default clerkMiddleware((auth, request) => {
+  if (isProtectedRoute(request)) {
+    auth().protect()
+  }
 });
  
 export const config = {
