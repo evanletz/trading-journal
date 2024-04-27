@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { useConvexAuth, useMutation, usePaginatedQuery, useQuery } from "convex/react";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -32,7 +32,6 @@ type TradesWithImageUrl = {
 
 export default function DashboardPage() {
   const { user } = useUser()
-  console.log('USER', user)
   const currency = useQuery(api.users.getCurrency);
   const deleteFunc = useMutation(api.trades.deleteEntry);
   const {
@@ -47,7 +46,7 @@ export default function DashboardPage() {
   const entriesByDate = groupByDate(entries ?? []);
 
   return (
-    <div>
+    <div className="min-h-96">
       {entries?.length == 0 && (
         <div className="flex mt-12 text-xl items-center justify-center">
           <p>Create a new journal entry to see your past trades here!</p>

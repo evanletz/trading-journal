@@ -45,7 +45,7 @@ export default function CreatePage() {
   }
 
   return (
-    <div className="mt-16">
+    <div className="mt-16 min-h-96">
       <h1 className="text-4xl font-bold mb-8">New Trade Entry</h1>
       <p className="text-lg max-w-md mb-8">
         Create a new entry to improve your trading!
