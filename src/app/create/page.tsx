@@ -12,27 +12,24 @@ import {
 import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { ImageEditor } from "@/components/ui/image-editor";
 import { Badge } from "@/components/ui/badge";
+import { useUser } from "@clerk/clerk-react";
 
 const defaultErrorState = {
   title: "",
   imageA: "",
-  imageB: "",
 };
 
 export default function CreatePage() {
+  const { user } = useUser();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const [imageA, setImageA] = useState("");
-  const [imageB, setImageB] = useState("");
   const [errors, setErrors] = useState(defaultErrorState);
   const { toast } = useToast();
 
   const isSubscribed = useIsSubscribed();
-  const user = useQuery(api.users.getUser);
-  if (!user) {
-    throw new Error("User not found!");
-  }
-  const credits = user?.credits;
-  const profileType = user?.profileType;
+  const fullUser = useQuery(api.users.getUserById, { userId: user?.id! });
+  const credits = fullUser?.credits;
+  const profileType = fullUser?.profileType;
 
   let badgeText = undefined;
   if (credits) {
@@ -63,14 +60,14 @@ export default function CreatePage() {
             </div>
           )}
           {isSubscribed &&
-            user.profileType === "basic" &&
-            user.credits === 0 && (
+            fullUser?.profileType === "basic" &&
+            fullUser?.credits === 0 && (
               <div className="flex items-center justify-center gap-2">
                 <UpgradeButtonExisting price_type="upgrade" />
                 <p> to create a new trade entry!</p>
               </div>
             )}
-          {isSubscribed && user.credits > 0 && (
+          {isSubscribed && (credits || 0) > 0 && (
             <div className="flex justify-center mb-8">
               <div className="flex justify-center border rounded w-48">
                 <UploadButton
@@ -98,7 +95,7 @@ export default function CreatePage() {
         </>
       )}
       {imageA && <ImageEditor image={imageA} />}
-      {credits > 0 && (
+      {(credits || 0) > 0 && (
         <div className="flex justify-end">
           <Badge variant="outline">{badgeText}</Badge>
         </div>

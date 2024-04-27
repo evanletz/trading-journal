@@ -1,8 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getUserId } from "./util";
-import { getFullUser, isUserSubscribed, getUser } from "./users";
+import { getFullUser } from "./users";
 import { paginationOptsValidator } from "convex/server";
+import { getUser, getUserId } from "./util";
 
 export const createTrade = mutation({
     args: {
@@ -28,22 +28,22 @@ export const createTrade = mutation({
             return [];
         }
 
-        const user = await getFullUser(ctx, userId);
-        if (!user) {
+        const fullUser = await getFullUser(ctx, userId);
+        if (!fullUser) {
             throw new Error('No user with that ID found')
         }
-        if (user.credits <= 0) {
+        if (fullUser.credits <= 0) {
             throw new Error('You ran out of credits! Upgrade to create a new trade.')
         }
 
         const imageUrl = await ctx.storage.getUrl(args.imageId)
 
-        await ctx.db.patch(user._id, {
-            credits: Math.max(0, user.credits - 1)
+        await ctx.db.patch(fullUser._id, {
+            credits: Math.max(0, fullUser.credits - 1)
         })
 
         return await ctx.db.insert('trades', {
-            userId: userId,
+            userId: fullUser.userId,
             tradeDate: args.tradeDate,
             ticker: args.ticker?.toUpperCase(),
             pnl: args.pnl,
@@ -75,12 +75,12 @@ export const updateTrade = mutation({
         ),
       },
     handler: async (ctx, args) => {
-        const user = await getUser(ctx, args)
+        const userId = await getUserId(ctx)
         const trade = await ctx.db.get(args.tradeId)
         if (!trade) {
             throw new Error('No trade found with that ID')
         }
-        if (user?.userId !== trade?.userId) {
+        if (userId !== trade?.userId) {
             throw new Error('Not authorized to make updates to this record')
         }
 
@@ -96,15 +96,15 @@ export const updateTrade = mutation({
 })
 
 export const getEntry = query({
-    args: {entryId: v.id('trades')},
+    args: { entryId: v.id('trades') },
     handler: async (ctx, args) => {
-        const user = await getUser(ctx, args)
+        const userId = await getUserId(ctx)
         const entry = await ctx.db.get(args.entryId)
         if (!entry) {
             return null;
         }
 
-        if (user?.userId !== entry?.userId) {
+        if (userId !== entry?.userId) {
             throw new Error('Not authorized to make updates to this record')
         }
 
@@ -113,9 +113,9 @@ export const getEntry = query({
 })
 
 export const getEntriesForUser = query({
-    args: { paginationOpts: paginationOptsValidator },
+    args: { paginationOpts: paginationOptsValidator, userId: v.optional(v.union(v.string(), v.null())) },
     handler: async (ctx, args) => {
-        const userId = await getUserId(ctx)
+        const userId = args.userId
         if (!userId) {
             throw new Error('No user found');
         }
@@ -130,16 +130,15 @@ export const getEntriesForUser = query({
 })
 
 export const deleteEntry = mutation({
-    args: {tradeId: v.id("trades")},
+    args: { tradeId: v.id("trades") },
     handler: async (ctx, args) => {
-        const user = await getUser(ctx, args)
+        const userId = await getUserId(ctx)
         const trade = await ctx.db.get(args.tradeId)
         if (!trade) {
             throw new Error('No trade found with that ID')
         }
-        if (user?.userId !== trade?.userId) {
-            console.log(user, trade)
-            throw new Error('Not authorized to make updates to this record')
+        if (userId !== trade?.userId) {
+            throw new Error('You are not authorized to make updates to this record')
         }
 
         return await ctx.db.delete(trade._id)

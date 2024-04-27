@@ -6,17 +6,17 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
-import { Doc, Id } from "../../../convex/_generated/dataModel";
-import { getImageUrls } from "../../../convex/files";
+import { Id } from "../../../convex/_generated/dataModel";
 import { groupByDate } from "@/lib/utils";
-import { Trash2, TrendingDown, TrendingUp } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 import { DeleteButton } from "@/components/cancel-button";
+import { useUser } from "@clerk/clerk-react";
 
 type TradesWithImageUrl = {
   _id: string;
@@ -31,21 +31,20 @@ type TradesWithImageUrl = {
 };
 
 export default function DashboardPage() {
+  const { user } = useUser()
+  console.log('USER', user)
+  const currency = useQuery(api.users.getCurrency);
+  const deleteFunc = useMutation(api.trades.deleteEntry);
   const {
     results: entries,
     status,
     loadMore,
   } = usePaginatedQuery(
     api.trades.getEntriesForUser,
-    {},
+    { userId: user?.id! },
     { initialNumItems: 15 }
   );
-  // const entries = useQuery(api.trades.getEntriesForUser);
   const entriesByDate = groupByDate(entries ?? []);
-  console.log(entriesByDate);
-
-  const currency = useQuery(api.users.getCurrency);
-  const deleteFunc = useMutation(api.trades.deleteEntry);
 
   return (
     <div>

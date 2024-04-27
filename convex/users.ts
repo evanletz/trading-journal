@@ -18,6 +18,16 @@ export const getUser = query({
     }
 })
 
+export const getUserById = query({
+    args: { userId: v.optional(v.string()) },
+    handler: async (ctx, args) => {
+        if (!args.userId) {
+            return undefined
+        }
+        return getFullUser(ctx, args.userId);
+    }
+})
+
 export const isUserSubscribed = async (ctx: QueryCtx | MutationCtx) => {
     const userId = await getUserId(ctx)
 
