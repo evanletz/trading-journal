@@ -80,7 +80,7 @@ export default function DashboardPage() {
                                 <TrendingUp color="green" />
                                 <p>
                                   {currency}
-                                  {entry.pnl}
+                                  {entry.pnl.toLocaleString()}
                                 </p>
                               </>
                             )}
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                                 <TrendingDown color="red" />
                                 <p>
                                   {currency}
-                                  {entry.pnl}
+                                  {entry.pnl.toLocaleString()}
                                 </p>
                               </>
                             )}
