@@ -194,6 +194,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
             alt="Uploaded Trade Image"
             style={{ cursor: "crosshair" }}
             onClick={handleImageClick}
+            className="border border-gray-300 rounded"
           />
 
           {stickers.map(({ stickerId, x, y }) => (
@@ -319,8 +320,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                             texts: fields,
                           };
                           if (props.trade?._id) {
-                            console.log("updating", props.trade._id);
-                            const tradeId = await updateTrade({
+                            await updateTrade({
                               ...{ tradeId: props.trade._id },
                               ...formData,
                             });
@@ -337,8 +337,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                               ),
                             });
                           } else {
-                            console.log("creating new trade");
-                            const tradeId = await createTrade(formData);
+                            await createTrade(formData);
                             toast({
                               title: "New trade created!",
                               action: (
@@ -351,12 +350,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           router.push(`/dashboard`);
                         } catch (err) {
                           toast({
-                            title: "You ran out of journal entries",
-                            description: (
-                              <div>
-                                <UpgradeButtonExisting /> to journal more trades
-                              </div>
-                            ),
+                            description: err as string,
                             variant: "destructive",
                           });
                         }

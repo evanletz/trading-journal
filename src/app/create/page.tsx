@@ -14,16 +14,11 @@ import { ImageEditor } from "@/components/ui/image-editor";
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@clerk/clerk-react";
 
-const defaultErrorState = {
-  title: "",
-  imageA: "",
-};
 
 export default function CreatePage() {
   const { user } = useUser();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const [imageA, setImageA] = useState("");
-  const [errors, setErrors] = useState(defaultErrorState);
   const { toast } = useToast();
 
   const isSubscribed = useIsSubscribed();
@@ -77,8 +72,7 @@ export default function CreatePage() {
                     setImageA((uploaded[0].response as any).storageId);
                   }}
                   onUploadError={(error: unknown) => {
-                    // Do something with the error.
-                    alert(`ERROR! ${error}`);
+                    throw new Error('Error: There was an issue uploading the image. Please try again.')
                   }}
                   onUploadBegin={() => {
                     if (!isSubscribed) {

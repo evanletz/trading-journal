@@ -12,8 +12,7 @@ export default function TradesPage() {
     entryId: params.tradeId,
   });
   if (!trade) {
-    return <div></div>;
+    throw new Error('Error: unable to retrieve this entry.')
   }
-
   return <ImageEditor image={trade?.imageId} trade={trade} />;
 }

@@ -105,7 +105,7 @@ export const getEntry = query({
         }
 
         if (userId !== entry?.userId) {
-            throw new Error('Not authorized to make updates to this record')
+            return null
         }
 
         return entry
@@ -117,7 +117,7 @@ export const getEntriesForUser = query({
     handler: async (ctx, args) => {
         const userId = args.userId
         if (!userId) {
-            throw new Error('No user found');
+            throw new Error('Error: could not find user.');
         }
 
         return await ctx.db.query('trades')
