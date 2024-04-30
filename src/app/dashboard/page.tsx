@@ -44,9 +44,38 @@ export default function DashboardPage() {
     { initialNumItems: 15 }
   );
   const entriesByDate = groupByDate(entries ?? []);
+  let totalTrades = 0
+  let pnls = []
+  let totalPnl = "0"
+  let winRate = 0
+  let avgPnl = "0"
+  let avgWin = "0"
+  let avgLoss = "0"
+  if (entries.length > 0) {
+    totalTrades = entries.length
+    pnls = entries.map((entry) => entry.pnl!)
+    totalPnl = pnls.reduce((a, b) => a+b).toLocaleString()
+    const numWinningTrades = pnls.reduce((a, b) => a + (b > 0 ? 1 : 0), 0) // count of pnls > 0
+    const numLosingTrades = pnls.reduce((a, b) => a + (b < 0 ? 1 : 0), 0) // count of pnls < 0
+    const sumWinningTrades = pnls.reduce((a, b) => a + (b > 0 ? b : 0), 0) // sum of pnls > 0
+    const sumLosingTrades = pnls.reduce((a, b) => a + (b < 0 ? b : 0), 0) // sum of pnls < 0
+    winRate = Math.round((numWinningTrades / totalTrades) * 100)
+    avgPnl = Math.round(sumWinningTrades / totalTrades).toLocaleString()
+    avgWin = Math.round(sumWinningTrades / numWinningTrades).toLocaleString()
+    avgLoss = Math.round(sumLosingTrades / numLosingTrades).toLocaleString()
+  }
+ 
 
   return (
     <div className="min-h-96">
+      <div className="flex m-8 rounded-2xl justify-items-center gap-1 grid lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-2">
+        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{totalTrades}</p><p>Total Trades</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{totalPnl}</p><p>Total PnL</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{winRate}%</p><p>Win Rate</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgPnl}</p><p>Avg. PnL</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgWin}</p><p>Avg. Win</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgLoss}</p><p>Avg. Loss</p></div>
+      </div>
       {entries?.length == 0 && (
         <div className="flex mt-12 text-xl items-center justify-center">
           <p>Create a new journal entry to see your past trades here!</p>
