@@ -21,7 +21,7 @@ export function Header() {
   const user = useQuery(api.users.getUser)
 
   return (
-    <div className="border-b">
+    <div className="border-b mb-16">
       <div className="h-16 container flex justify-between items-center">
         <div className="w-48 justify-start">
           <div className="hidden dark:block">
