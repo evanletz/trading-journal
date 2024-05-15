@@ -68,13 +68,13 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-96">
-      <div className="flex m-8 rounded-2xl justify-items-center gap-1 grid lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-2">
-        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{totalTrades}</p><p>Total Trades</p></div>
-        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{totalPnl}</p><p>Total PnL</p></div>
-        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{winRate}%</p><p>Win Rate</p></div>
-        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgPnl}</p><p>Avg. PnL</p></div>
-        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgWin}</p><p>Avg. Win</p></div>
-        <div className="border min-h-24 text-center bg-gray-900 w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgLoss}</p><p>Avg. Loss</p></div>
+      <div className="flex m-auto sm:m-8 rounded-2xl justify-items-center gap-1 grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2">
+        <div className="border min-h-24 text-center bg-gray-900 w-36 sm:w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{totalTrades}</p><p>Total Trades</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-36 sm:w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{totalPnl}</p><p>Total PnL</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-36 sm:w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{winRate}%</p><p>Win Rate</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-36 sm:w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgPnl}</p><p>Avg. PnL</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-36 sm:w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgWin}</p><p>Avg. Win</p></div>
+        <div className="border min-h-24 text-center bg-gray-900 w-36 sm:w-48 flex flex-col items-center justify-center rounded"><p className="text-xl font-bold">{currency}{avgLoss}</p><p>Avg. Loss</p></div>
       </div>
       {entries?.length == 0 && (
         <div className="flex mt-12 text-xl items-center justify-center">
