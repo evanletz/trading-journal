@@ -75,7 +75,7 @@ export function Footer() {
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             © 2024{" "}
             <a href="#" className="hover:underline">
-              Dev 22, LLC
+              Dev 22 LLC
             </a>
             . All Rights Reserved.
           </span>
