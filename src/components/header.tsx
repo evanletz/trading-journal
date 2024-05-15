@@ -99,8 +99,16 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Create</DropdownMenuItem>
-              <DropdownMenuItem>Dashboard</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard">
+                  Dashboard
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/create">
+                  Create
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <SettingsMenu />
