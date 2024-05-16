@@ -6,6 +6,7 @@ const isProtectedRoute = createRouteMatcher(
     '/dashboard(.*)',
     '/create(.*)',
     '/trades/(.*)',
+    '/pricing/(.*)'
   ]
 );
 
