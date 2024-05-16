@@ -31,7 +31,8 @@ export function SettingsMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Settings className="mr-2 h-6 w-6" strokeWidth={2} />
+        <Settings className="hidden md:inline mr-2 h-6 w-6" strokeWidth={2} />
+        <p className="md:hidden text-sm pl-2">Settings</p>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuSub>
