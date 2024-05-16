@@ -8,8 +8,9 @@ export default function HowToAccordion() {
     const [step3, setStep3] = useState(true)
 
     return (
-        <div className="justify-center flex grid-cols-2 gap-14 items-center h-72">
-            <div className="flex w-96">
+        // <div className="justify-center flex grid-cols-2 gap-14 items-center h-72">
+        <div className="flex flex-col items-center sm:flex-row sm:justify-center sm:h-72">
+            <div className="flex w-75% sm:w-96">
                 <Accordion type="single" collapsible defaultValue="step-1">
                     <AccordionItem value="step-1">
                     <AccordionTrigger className="data-[state=open]:text-green-500" onClick={() => {setStep1(false); setStep2(true); setStep3(true)}}>1. Upload your chart image</AccordionTrigger>
@@ -31,7 +32,7 @@ export default function HowToAccordion() {
                     </AccordionItem>
                 </Accordion>
             </div>
-            <div className="flex w-96 items-center justify-center">
+            <div className="flex 2-75% sm:w-96 items-center justify-center">
                 <Image alt="Step 1 - Upload Your Chart" src="/example.png" width="300" height="300" className="border border-gray-600 rounded-2xl" hidden={step1} />
                 <Image alt="Step 1 - Upload Your Chart" src="/chart.png" width="300" height="300" className="border border-gray-600 rounded-2xl" hidden={step2} />
             </div>
