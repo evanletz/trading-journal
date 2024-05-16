@@ -14,7 +14,6 @@ import { ImageEditor } from "@/components/ui/image-editor";
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@clerk/clerk-react";
 
-
 export default function CreatePage() {
   const { user } = useUser();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
@@ -72,7 +71,9 @@ export default function CreatePage() {
                     setImageA((uploaded[0].response as any).storageId);
                   }}
                   onUploadError={(error: unknown) => {
-                    throw new Error('Error: There was an issue uploading the image. Please try again.')
+                    throw new Error(
+                      "Error: There was an issue uploading the image. Please try again."
+                    );
                   }}
                   onUploadBegin={() => {
                     if (!isSubscribed) {
@@ -90,7 +91,7 @@ export default function CreatePage() {
       )}
       {imageA && <ImageEditor image={imageA} />}
       {(credits || 0) > 0 && (
-        <div className="flex justify-end">
+        <div className="flex justify-center sm:justify-end">
           <Badge variant="outline">{badgeText}</Badge>
         </div>
       )}
