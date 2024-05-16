@@ -179,20 +179,23 @@ export const ImageEditor = (props: ImageEditorProps) => {
 
   return (
     <div
-      className="flex flex-col grid md:grid-cols-3 sm:grid-cols-1 mb-8 items-center"
+      className="flex flex-col grid md:grid-cols-3 sm:grid-cols-1 mb-8 items-center gap-4"
       onMouseUp={handleMouseUp}
     >
       <div
         className="md:col-span-2 grid-cols-1 gap-4 rounded p-2 items-right justify-center"
         style={{ borderColor: "green" }}
       >
-        <div onMouseMove={handleMouseMove} style={{ position: "relative" }}>
+        <div
+          onMouseMove={handleMouseMove}
+          style={{ position: "relative" }}
+          className="items-center justify-center flex border h-dvh sm:h-96"
+        >
           <Image
             src={imageUrl}
-            width="1000"
-            height="1000"
+            fill={true}
             alt="Uploaded Trade Image"
-            style={{ cursor: "crosshair" }}
+            style={{ cursor: "crosshair", objectFit: "contain" }}
             onClick={handleImageClick}
             className="border border-gray-300 rounded"
           />
@@ -218,9 +221,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
           ))}
         </div>
       </div>
-      <div
-        className="flex flex-col col-span-1 gap-4 w-full"
-      >
+      <div className="flex flex-col col-span-1 gap-4 w-full">
         <Tabs
           defaultValue="details"
           activationMode="manual"
@@ -281,7 +282,8 @@ export const ImageEditor = (props: ImageEditorProps) => {
                 <CardHeader>
                   <CardTitle>Summary</CardTitle>
                   <CardDescription>
-                    Enter some information about your trade. Click the 'Save' button below to finish.
+                    Enter some information about your trade. Click the 'Save'
+                    button below to finish.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -291,7 +293,8 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       e.preventDefault();
                       if (!isSubscribed) {
                         toast({
-                          title: "You must be subscribed to create a new entry!",
+                          title:
+                            "You must be subscribed to create a new entry!",
                           variant: "destructive",
                         });
                       }
@@ -303,16 +306,22 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         tradeDate: formSummaryData.get("tradeDate") as string,
                         ticker: formSummaryData.get("ticker") as string,
                         pnl: parseFloat(formSummaryData.get("pnl") as string),
-                        description: formSummaryData.get("description") as string,
+                        description: formSummaryData.get(
+                          "description"
+                        ) as string,
                         imageId: imageA,
                         texts: fields,
                       });
                       if (isFormValid.success) {
                         try {
                           const formData = {
-                            tradeDate: formSummaryData.get("tradeDate") as string,
+                            tradeDate: formSummaryData.get(
+                              "tradeDate"
+                            ) as string,
                             ticker: formSummaryData.get("ticker") as string,
-                            pnl: parseFloat(formSummaryData.get("pnl") as string),
+                            pnl: parseFloat(
+                              formSummaryData.get("pnl") as string
+                            ),
                             description: formSummaryData.get(
                               "description"
                             ) as string,
@@ -342,7 +351,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
                               title: "New trade created!",
                               action: (
                                 <Button asChild size={"sm"}>
-                                  <Link href="/create">Create another entry</Link>
+                                  <Link href="/create">
+                                    Create another entry
+                                  </Link>
                                 </Button>
                               ),
                             });
@@ -403,7 +414,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       />
                     </div>
                     <div className="flex gap-12 items-center justify-center mt-8">
-                      <AlertButton resetFunc={() => router.push("/dashboard")} />
+                      <AlertButton
+                        resetFunc={() => router.push("/dashboard")}
+                      />
                       <Button type="submit">Save</Button>
                     </div>
                   </form>
