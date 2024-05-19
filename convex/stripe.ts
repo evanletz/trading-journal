@@ -46,6 +46,7 @@ export const pay = action({
       mode: "payment",
       success_url: `${domain}/create`,
       cancel_url: `${domain}`,
+      allow_promotion_codes: true,
     });
 
     return session.url!;
