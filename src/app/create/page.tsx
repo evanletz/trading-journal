@@ -50,7 +50,7 @@ export default function CreatePage() {
           {isSubscribed &&
             fullUser?.profileType === "basic" &&
             fullUser?.credits === 0 && (
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 mb-8">
                 <UpgradeButtonExisting price_type="upgrade" />
                 <p> to create a new trade entry!</p>
               </div>
@@ -84,7 +84,7 @@ export default function CreatePage() {
             </div>
           )}
           {!isSubscribed && (
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 mb-8">
               <UpgradeButtonNew />
               <p> to create a new trade entry!</p>
             </div>
