@@ -83,7 +83,7 @@ export default function CreatePage() {
               </div>
             </div>
           )}
-          {!isSubscribed && (
+          {!isSubscribed && profileType === "free" && credits === 0 && (
             <div className="flex items-center justify-center gap-2 mb-8">
               <UpgradeButtonNew />
               <p> to create a new trade entry!</p>
