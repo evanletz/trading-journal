@@ -74,7 +74,7 @@ export default function CreatePage() {
                   onUploadBegin={() => {
                     if (
                       (profileType === "free" && credits === 0) ||
-                      !isSubscribed
+                      (!isSubscribed && profileType !== "free")
                     ) {
                       setImageA("");
                       toast({

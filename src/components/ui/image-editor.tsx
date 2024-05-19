@@ -297,7 +297,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       if (
                         (fullUser?.profileType === "free" &&
                           fullUser?.credits === 0) ||
-                        !isSubscribed
+                        (!isSubscribed && fullUser?.profileType !== "free")
                       ) {
                         toast({
                           title:
