@@ -65,9 +65,11 @@ function Trades() {
     const sumWinningTrades = pnls.reduce((a, b) => a + (b > 0 ? b : 0), 0); // sum of pnls > 0
     const sumLosingTrades = pnls.reduce((a, b) => a + (b < 0 ? b : 0), 0); // sum of pnls < 0
     winRate = Math.round((numWinningTrades / totalTrades) * 100);
-    avgPnl = Math.round(sumWinningTrades / totalTrades).toLocaleString();
-    avgWin = Math.round(sumWinningTrades / numWinningTrades).toLocaleString();
-    avgLoss = Math.round(sumLosingTrades / numLosingTrades).toLocaleString();
+    avgPnl = Math.round(sumWinningTrades / totalTrades).toLocaleString() || "0";
+    avgWin =
+      Math.round(sumWinningTrades / numWinningTrades).toLocaleString() || "0";
+    avgLoss =
+      Math.round(sumLosingTrades / numLosingTrades).toLocaleString() || "0";
   }
 
   if (entries?.length == 0) {

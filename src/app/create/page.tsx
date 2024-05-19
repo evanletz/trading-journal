@@ -26,7 +26,7 @@ export default function CreatePage() {
   const profileType = fullUser?.profileType;
 
   let badgeText = undefined;
-  if (credits) {
+  if (credits || credits === 0) {
     if (credits === 0) {
       badgeText = "0 ENTRIES REMAINING";
     } else if (profileType === "free" && credits === 1) {
@@ -72,7 +72,11 @@ export default function CreatePage() {
                     );
                   }}
                   onUploadBegin={() => {
-                    if (!isSubscribed) {
+                    if (
+                      (profileType === "free" && credits === 0) ||
+                      !isSubscribed
+                    ) {
+                      setImageA("");
                       toast({
                         title: "You must be subscribed to create a new entry!",
                         variant: "destructive",
@@ -92,7 +96,7 @@ export default function CreatePage() {
         </>
       )}
       {imageA && <ImageEditor image={imageA} />}
-      {(credits || 0) > 0 && (
+      {(credits || credits === 0) && (
         <div className="flex justify-center sm:justify-end">
           <Badge variant="outline">{badgeText}</Badge>
         </div>

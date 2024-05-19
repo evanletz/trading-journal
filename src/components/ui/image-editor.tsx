@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "./card";
 import { Textarea } from "./textarea";
-import { UpgradeButtonExisting } from "../upgrade-button";
 import { Button } from "./button";
 import Link from "next/link";
 import { Label } from "./label";
@@ -27,6 +26,7 @@ import { useIsSubscribed } from "@/hooks/useIsSubscribed";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
+import { useUser } from "@clerk/clerk-react";
 
 type ImageEditorProps = {
   image: string;
@@ -34,6 +34,9 @@ type ImageEditorProps = {
 };
 
 export const ImageEditor = (props: ImageEditorProps) => {
+  const { user } = useUser();
+  const fullUser = useQuery(api.users.getUserById, { userId: user?.id! });
+
   interface Sticker {
     stickerNum: number;
     stickerId: number;
@@ -291,12 +294,17 @@ export const ImageEditor = (props: ImageEditorProps) => {
                     id="trade-summary-form"
                     onSubmit={async (e) => {
                       e.preventDefault();
-                      if (!isSubscribed) {
+                      if (
+                        (fullUser?.profileType === "free" &&
+                          fullUser?.credits === 0) ||
+                        !isSubscribed
+                      ) {
                         toast({
                           title:
                             "You must be subscribed to create a new entry!",
                           variant: "destructive",
                         });
+                        return;
                       }
                       const summaryForm = document.getElementById(
                         "trade-summary-form"
