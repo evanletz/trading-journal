@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           <Toaster />
           <Footer />
         </Providers>
+        <GoogleAnalytics gaId="G-DEP5N793NW" />
       </body>
     </html>
   );
