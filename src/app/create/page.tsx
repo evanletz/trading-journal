@@ -47,12 +47,6 @@ export default function CreatePage() {
 
       {!imageA && (
         <>
-          {!isSubscribed && (
-            <div className="flex items-center justify-center gap-2">
-              <UpgradeButtonNew />
-              <p> to create a new trade entry!</p>
-            </div>
-          )}
           {isSubscribed &&
             fullUser?.profileType === "basic" &&
             fullUser?.credits === 0 && (
@@ -61,7 +55,9 @@ export default function CreatePage() {
                 <p> to create a new trade entry!</p>
               </div>
             )}
-          {isSubscribed && (credits || 0) > 0 && (
+          {/* if user is subscribed with credits, or if user is on free plan with 1 credit */}
+          {((isSubscribed && (credits || 0) > 0) ||
+            (!isSubscribed && profileType == "free" && credits === 1)) && (
             <div className="flex justify-center mb-8">
               <div className="flex justify-center border rounded w-48">
                 <UploadButton
@@ -85,6 +81,12 @@ export default function CreatePage() {
                   }}
                 />
               </div>
+            </div>
+          )}
+          {!isSubscribed && (
+            <div className="flex items-center justify-center gap-2">
+              <UpgradeButtonNew />
+              <p> to create a new trade entry!</p>
             </div>
           )}
         </>
