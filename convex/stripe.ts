@@ -72,15 +72,11 @@ export const fulfill = internalAction({
         metadata: Metadata;
       }
       if (event.type === "checkout.session.completed") {
-        if (completedEvent.payment_status === 'paid') {
-          console.log(completedEvent.amount_subtotal)
-        }
-
         const userId = completedEvent.metadata.userId;
 
         await ctx.runMutation(internal.users.updateSubscription, {
           userId,
-          subscriptionId: completedEvent.payment_intent as string,
+          subscriptionId: completedEvent.payment_intent as string ?? "promo_" + completedEvent.id,
           endsOn: 0,
           price: completedEvent.amount_subtotal!
         })
