@@ -113,7 +113,7 @@ export default async function Home() {
               Keep trade tracking simple
             </h2>
             <p className="mb-4 font-medium">Most trade journals have:</p>
-            <p className="mb-4 font-light flex items-center justify-center gap-2">
+            <p className="mb-4 font-light flex items-center justify-center gap-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -131,7 +131,7 @@ export default async function Home() {
               </svg>
               Countless features you don't need
             </p>
-            <p className="mb-4 font-light flex items-center justify-center gap-2">
+            <p className="mb-4 font-light flex items-center justify-center gap-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -149,7 +149,7 @@ export default async function Home() {
               </svg>
               Complicated processes
             </p>
-            <p className="mb-4 font-light flex items-center justify-center gap-2">
+            <p className="mb-4 font-light flex items-center justify-center gap-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -167,23 +167,8 @@ export default async function Home() {
               </svg>
               Steep learning curves
             </p>
-            <p className="mt-8 inline-flex items-center font-medium text-primary-600 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-700">
+            <p className="mt-4 inline-flex items-center font-medium text-primary-600 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-700">
               Jumpstart your trade reviews and get to journaling fast
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-move-down"
-              >
-                <path d="M8 18L12 22L16 18" />
-                <path d="M12 2V22" />
-              </svg>
             </p>
           </div>
         </div>
@@ -195,7 +180,7 @@ export default async function Home() {
               Get intimate with each trade
             </h2>
             <p className="text-gray-500 sm:text-xl dark:text-gray-400">
-              The best way to improve your trading is to truly understand each
+              The only way to improve your trading is to truly understand each
               trade you take. Don't settle for the automated import-and-forget
               approach of other journals.
             </p>
