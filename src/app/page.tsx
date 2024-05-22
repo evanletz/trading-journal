@@ -21,7 +21,20 @@ export default async function Home() {
               financial freedom.
             </p>
             <div className="flex mb-6 lg:mb-8">
-              <Image src="/chart.png" alt="mockup" width="600" height="400" />
+              <video
+                width="600"
+                height="400"
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+                preload="none"
+                className="border border-gray-600 rounded-2xl"
+              >
+                <source src="Trade-Trender-Hero-Demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
             <div className="flex flex-col items-center sm:flex-row sm:justify-center gap-4">
               <p className="flex items-center justify-right gap-2 mb-2">
@@ -256,6 +269,23 @@ export default async function Home() {
                   <li>
                     <p className="flex items-center justify-right gap-2 mb-2">
                       <svg
+                        className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                      100 journal entries
+                    </p>
+                  </li>
+                  <li>
+                    <p className="flex items-center justify-right gap-2 mb-2">
+                      <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
@@ -271,23 +301,6 @@ export default async function Home() {
                         <path d="m6 6 12 12" />
                       </svg>
                       Limited future updates
-                    </p>
-                  </li>
-                  <li>
-                    <p className="flex items-center justify-right gap-2 mb-2">
-                      <svg
-                        className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                      100 journal entries
                     </p>
                   </li>
                 </ul>
@@ -362,8 +375,8 @@ export default async function Home() {
                           clipRule="evenodd"
                         ></path>
                       </svg>
-                      All future updates
-                      <FeaturesTooltip />
+                      <span className="font-bold">Unlimited</span> journal
+                      entries
                     </p>
                   </li>
                   <li>
@@ -380,8 +393,8 @@ export default async function Home() {
                           clipRule="evenodd"
                         ></path>
                       </svg>
-                      <span className="font-bold">Unlimited</span> journal
-                      entries
+                      All future updates
+                      <FeaturesTooltip />
                     </p>
                   </li>
                 </ul>
