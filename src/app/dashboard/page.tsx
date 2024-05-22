@@ -129,7 +129,7 @@ function Trades() {
                 {entries?.map((entry: TradesWithImageUrl) => {
                   return (
                     <Card key={entry._id}>
-                      <CardHeader className="items-center">
+                      <CardHeader className="items-center min-h-56">
                         <Image
                           src={entry.imageUrl}
                           width="300"
