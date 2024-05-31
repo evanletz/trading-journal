@@ -198,6 +198,33 @@ function Trades() {
             </>
           );
         })}
+        <div className="flex justify-center items-center">
+          <button
+            style={{ width: "100%", height: "30px" }}
+            className="bg-green-500 fixed bottom-0 flex justify-center items-center sm:hidden"
+            onClick={() => {
+              console.log("clicked");
+            }}
+          >
+            <Link href="/create">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-plus"
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+            </Link>
+          </button>
+        </div>
       </>
     );
   }
