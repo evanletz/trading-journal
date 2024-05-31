@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Info, Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
@@ -182,49 +182,77 @@ export const ImageEditor = (props: ImageEditorProps) => {
 
   return (
     <div
-      className="flex flex-col grid md:grid-cols-3 sm:grid-cols-1 mb-8 items-center gap-4"
+      // className="flex flex-col grid md:grid-cols-3 sm:grid-cols-1 mb-8 items-center gap-4"
+      className="flex flex-col lg:flex-row mb-8 -mt-8 sm:mt-0 items-center gap-4"
       onMouseUp={handleMouseUp}
+      onTouchEnd={handleMouseUp} // ????????
     >
       <div
-        className="md:col-span-2 grid-cols-1 gap-4 rounded p-2 items-right justify-center"
-        style={{ borderColor: "green" }}
+        // className="md:col-span-2 grid-cols-1 gap-4 rounded p-2 items-right justify-center"
+        className="flex-auto gap-4 rounded p-2 items-right justify-center"
       >
-        <div
-          onMouseMove={handleMouseMove}
-          style={{ position: "relative" }}
-          className="items-center justify-center flex border h-dvh sm:h-96"
-        >
-          <Image
-            src={imageUrl}
-            fill={true}
-            alt="Uploaded Trade Image"
-            style={{ cursor: "crosshair", objectFit: "contain" }}
-            onClick={handleImageClick}
-            className="border border-gray-300 rounded"
-          />
+        <div className="flex items-center justify-center sm:h-96">
+          <div
+            id="img-div"
+            onMouseMove={handleMouseMove}
+            style={{ position: "relative", width: 100, height: 100 }}
+          >
+            <Image
+              src={imageUrl}
+              alt="Uploaded Trade Image"
+              onClick={handleImageClick}
+              fill={true}
+              // sizes="(max-width: 710px) 120px, (max-width: 991px) 193px, 500"
+              onLoad={(e) => {
+                const ratio =
+                  e.currentTarget.naturalWidth / e.currentTarget.naturalHeight;
 
-          {stickers.map(({ stickerId, x, y }) => (
-            <div
-              id={stickerId.toString()}
-              key={stickerId}
-              style={{ position: "absolute", left: `${x}%`, top: `${y}%` }}
-            >
-              <Info
-                strokeWidth={3}
-                style={{
-                  cursor: "move",
-                  color: "black",
-                  fill: "white",
-                  border: "10",
-                  borderColor: "black",
-                }}
-                onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
-              />
-            </div>
-          ))}
+                // is portrait
+                if (ratio < 1) {
+                  const h = Math.min(500, e.currentTarget.naturalHeight);
+                  e.currentTarget.parentElement!.style.height = `${Math.min(500, e.currentTarget.naturalHeight)}px`;
+                  e.currentTarget.parentElement!.style.width = `${h * ratio}px`;
+                }
+                // is landscape
+                else {
+                  const w = Math.min(750, e.currentTarget.naturalWidth);
+                  e.currentTarget.parentElement!.style.width = `${Math.min(750, e.currentTarget.naturalWidth)}px`;
+                  e.currentTarget.parentElement!.style.height = `${w / ratio}px`;
+                }
+                console.log(
+                  e.currentTarget.naturalWidth,
+                  e.currentTarget.naturalHeight,
+                  ratio
+                );
+              }}
+              style={{ cursor: "crosshair", objectFit: "contain" }}
+            />
+            {stickers.map(({ stickerId, x, y }) => (
+              <div
+                id={stickerId.toString()}
+                key={stickerId}
+                style={{ position: "absolute", left: `${x}%`, top: `${y}%` }}
+              >
+                <Info
+                  strokeWidth={3}
+                  style={{
+                    cursor: "move",
+                    color: "black",
+                    fill: "white",
+                    border: "10",
+                    borderColor: "black",
+                  }}
+                  onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="flex flex-col col-span-1 gap-4 w-full">
+      <div
+        // className="flex flex-col col-span-1 gap-4 w-full"
+        className="flex-initial w-full lg:w-1/2 gap-4 mt-8 lg:mt-0"
+      >
         <Tabs
           defaultValue="details"
           activationMode="manual"
@@ -392,7 +420,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       />
                     </div>
                     <div className="flex gap-4 items-center mt-4">
-                      <div>
+                      <div className="flex-auto">
                         <Label htmlFor="ticker">Ticker</Label>
                         <Input
                           {...register(`ticker`)}
@@ -402,7 +430,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           placeholder="e.g. SPY, NQ, BTC"
                         />
                       </div>
-                      <div>
+                      <div className="flex-auto">
                         <Label htmlFor="pnl">Profit/Loss ({currency})</Label>
                         <Input
                           {...register(`pnl`)}
