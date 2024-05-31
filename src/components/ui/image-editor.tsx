@@ -472,6 +472,8 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           type="text"
                           maxLength={10}
                           placeholder="e.g. SPY, NQ, BTC"
+                          autoCapitalize="characters"
+                          className="uppercase"
                         />
                       </div>
                       <div className="flex-auto">
