@@ -113,6 +113,19 @@ export const ImageEditor = (props: ImageEditorProps) => {
     setOffset({ offsetX, offsetY });
   };
 
+  const handleStickerTouchStart = (
+    id: number,
+    e: React.TouchEvent<SVGSVGElement>
+  ) => {
+    e.preventDefault(); // prevents the annoying highlighting
+    const touch = e.touches[0];
+    setDraggingStickerId(id);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const offsetX = touch.clientX - rect.left;
+    const offsetY = touch.clientY - rect.top;
+    setOffset({ offsetX, offsetY });
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
     e.preventDefault(); // prevents the annoying highlighting
 
@@ -130,6 +143,36 @@ export const ImageEditor = (props: ImageEditorProps) => {
           e.clientY < rect.top ||
           e.clientX > rect.right ||
           e.clientY > rect.bottom
+        ) {
+        } // do nothing if out of bounds
+        else {
+          updatedPositions[index] = { ...updatedPositions[index], x, y };
+        }
+        setStickers(updatedPositions);
+      }
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLImageElement>) => {
+    e.preventDefault(); // prevents the annoying highlighting
+    const touch = e.touches[0];
+
+    if (draggingStickerId !== null && offset) {
+      const index = stickers.findIndex(
+        (sticker) => sticker.stickerId === draggingStickerId
+      );
+      if (index !== -1) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x =
+          ((touch.clientX - rect.left - offset.offsetX) / rect.width) * 100;
+        const y =
+          ((touch.clientY - rect.top - offset.offsetY) / rect.height) * 100;
+        const updatedPositions = [...stickers];
+        if (
+          touch.clientX < rect.left ||
+          touch.clientY < rect.top ||
+          touch.clientX > rect.right ||
+          touch.clientY > rect.bottom
         ) {
         } // do nothing if out of bounds
         else {
@@ -195,7 +238,13 @@ export const ImageEditor = (props: ImageEditorProps) => {
           <div
             id="img-div"
             onMouseMove={handleMouseMove}
-            style={{ position: "relative", width: 100, height: 100 }}
+            onTouchMove={handleTouchMove} // ????????
+            style={{
+              position: "relative",
+              width: 100,
+              height: 100,
+              touchAction: "none",
+            }}
           >
             <Image
               src={imageUrl}
@@ -243,6 +292,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                     borderColor: "black",
                   }}
                   onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
+                  onTouchStart={(e) => handleStickerTouchStart(stickerId, e)}
                 />
               </div>
             ))}
