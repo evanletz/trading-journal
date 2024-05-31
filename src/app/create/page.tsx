@@ -41,8 +41,8 @@ export default function CreatePage() {
   return (
     <div className="min-h-96">
       <h1 className="text-4xl font-bold mb-8">New Trade Entry</h1>
-      <p className="text-lg max-w-md mb-8">
-        Create a new entry to improve your trading!
+      <p className="text-lg mb-16">
+        Upload a screenshot of your trade chart below.
       </p>
 
       {!imageA && (
@@ -63,6 +63,7 @@ export default function CreatePage() {
                 <UploadButton
                   uploadUrl={generateUploadUrl}
                   fileTypes={[".png", ".jpeg", ".jpg"]}
+                  multiple={false}
                   onUploadComplete={async (uploaded: UploadFileResponse[]) => {
                     setImageA((uploaded[0].response as any).storageId);
                   }}

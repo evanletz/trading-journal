@@ -506,6 +506,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
           </div>
         </Tabs>
       </div>
+      <ScrollToTop />
     </div>
   );
 };
