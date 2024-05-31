@@ -27,6 +27,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { useUser } from "@clerk/clerk-react";
+import ScrollToTop from "./scroll-to-top";
 
 type ImageEditorProps = {
   image: string;
@@ -74,7 +75,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
       texts: props.trade?.texts,
     },
   });
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: "texts",
   });
@@ -149,6 +150,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
           updatedPositions[index] = { ...updatedPositions[index], x, y };
         }
         setStickers(updatedPositions);
+        update(index, updatedPositions[index]);
       }
     }
   };
@@ -179,6 +181,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
           updatedPositions[index] = { ...updatedPositions[index], x, y };
         }
         setStickers(updatedPositions);
+        update(index, updatedPositions[index]);
       }
     }
   };
@@ -228,7 +231,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
       // className="flex flex-col grid md:grid-cols-3 sm:grid-cols-1 mb-8 items-center gap-4"
       className="flex flex-col lg:flex-row mb-8 -mt-8 sm:mt-0 items-center gap-4"
       onMouseUp={handleMouseUp}
-      onTouchEnd={handleMouseUp} // ????????
+      onTouchEnd={handleMouseUp}
     >
       <div
         // className="md:col-span-2 grid-cols-1 gap-4 rounded p-2 items-right justify-center"
@@ -251,7 +254,6 @@ export const ImageEditor = (props: ImageEditorProps) => {
               alt="Uploaded Trade Image"
               onClick={handleImageClick}
               fill={true}
-              // sizes="(max-width: 710px) 120px, (max-width: 991px) 193px, 500"
               onLoad={(e) => {
                 const ratio =
                   e.currentTarget.naturalWidth / e.currentTarget.naturalHeight;
@@ -268,11 +270,6 @@ export const ImageEditor = (props: ImageEditorProps) => {
                   e.currentTarget.parentElement!.style.width = `${Math.min(750, e.currentTarget.naturalWidth)}px`;
                   e.currentTarget.parentElement!.style.height = `${w / ratio}px`;
                 }
-                console.log(
-                  e.currentTarget.naturalWidth,
-                  e.currentTarget.naturalHeight,
-                  ratio
-                );
               }}
               style={{ cursor: "crosshair", objectFit: "contain" }}
             />
@@ -299,10 +296,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
           </div>
         </div>
       </div>
-      <div
-        // className="flex flex-col col-span-1 gap-4 w-full"
-        className="flex-initial w-full lg:w-1/2 gap-4 mt-8 lg:mt-0"
-      >
+      <div className="flex-initial w-full lg:w-1/2 gap-4 mt-8 lg:mt-0">
         <Tabs
           defaultValue="details"
           activationMode="manual"
