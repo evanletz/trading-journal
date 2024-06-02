@@ -343,6 +343,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                                 field.text = e.currentTarget.value;
                               }}
                               key={field.id}
+                              className="text-base"
                             />
                           </div>
                         </div>
@@ -461,6 +462,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         id="tradeDate"
                         type="datetime-local"
                         required
+                        className="text-base"
                       />
                     </div>
                     <div className="flex gap-4 items-center mt-4">
@@ -473,7 +475,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           maxLength={10}
                           placeholder="e.g. SPY, NQ, BTC"
                           autoCapitalize="characters"
-                          className="uppercase"
+                          className="uppercase text-base"
                         />
                       </div>
                       <div className="flex-auto">
@@ -483,6 +485,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           id="pnl"
                           type="number"
                           step="0.01"
+                          className="text-base"
                         />
                       </div>
                     </div>
@@ -493,6 +496,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                         id="description"
                         maxLength={500}
                         placeholder="How did you feel during this trade? What did you learn?"
+                        className="text-base"
                       />
                     </div>
                     <div className="flex gap-12 items-center justify-center mt-8">
