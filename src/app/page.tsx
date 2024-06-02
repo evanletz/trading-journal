@@ -4,19 +4,19 @@ import HowToAccordion from "@/components/ui/how-to";
 import { Button } from "@/components/ui/button";
 import FeaturesTooltip from "@/components/ui/tooltip";
 import { GetStartedButton } from "@/components/upgrade-button";
-import Image from "next/image";
 import Link from "next/link";
+import FAQs from "@/components/ui/faqs";
 
 export default async function Home() {
   return (
     <main>
       <section>
-        <div className="max-w-screen-xl px-4 pb-8 mx-auto lg:pb-16 sm:gap-8 xl:gap-0 lg:grid-cols-12">
+        <div className="max-w-screen-xl -mt-8 md:-mt-4 px-4 pb-8 mx-auto lg:pb-16 sm:gap-8 xl:gap-0 lg:grid-cols-12">
           <div className="flex flex-col mr-auto items-center lg:col-span-7">
-            <h1 className="text-center max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-              The simplest way to track your trades
+            <h1 className="text-center max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+              The simplest way to<br></br>track your trades
             </h1>
-            <p className="text-center max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+            <p className="text-center max-w-xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
               An ultra-lightweight trade journal to accelerate your journey to
               financial freedom.
             </p>
@@ -36,7 +36,7 @@ export default async function Home() {
                 Your browser does not support the video tag.
               </video>
             </div>
-            <div className="flex flex-col items-center sm:flex-row sm:justify-center gap-4">
+            <div className="flex flex-col items-center sm:flex-row sm:justify-center gap-1 md:gap-4">
               <p className="flex items-center justify-right gap-2 mb-2">
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-500"
@@ -202,7 +202,10 @@ export default async function Home() {
           <div className="flex flex-col items-center sm:flex-row sm:justify-center space-y-8 lg:grid lg:grid-cols-2 sm:gap-6 xl:gap-14 lg:space-y-0">
             <div className="flex justify-end">
               <div className="p-6 w-72 text-gray-900 bg-white rounded-3xl border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
-                <div className="my-8 text-center">
+                <h3 className="text-center text-2xl tracking-tight font-bold text-gray-900 dark:text-white">
+                  Basic
+                </h3>
+                <div className="my-4 text-center">
                   <div className="flex justify-center items-baseline">
                     <span className="text-xl line-through text-gray-500 dark:text-gray-400">
                       $39
@@ -297,7 +300,10 @@ export default async function Home() {
                 Traders' Choice
               </div>
               <div className="p-6 w-72 text-gray-900 bg-white rounded-3xl border border-gray-100 shadow dark:border-yellow-500 xl:p-8 dark:bg-gray-800 dark:text-white">
-                <div className="my-8 text-center">
+                <h3 className="text-center text-2xl tracking-tight font-bold text-gray-900 dark:text-white">
+                  Unlimited
+                </h3>
+                <div className="my-4 text-center">
                   <div className="flex justify-center items-baseline">
                     <span className="text-xl line-through text-gray-500 dark:text-gray-400">
                       $59
@@ -385,6 +391,26 @@ export default async function Home() {
                 </ul>
                 <GetStartedButton price_type="unlimited" />
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+          <div className="mx-auto max-w-screen-md grid grid-cols-1 sm:grid-cols-2 mb-16 sm:mb-8 lg:mb-16">
+            <div className="mb-8">
+              <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+                Frequently Asked Questions
+              </h2>
+              <p>
+                Have other questions? Send me an email at{" "}
+                <a href="mailto:evan@tradetrender.com" className="underline">
+                  evan@tradetrender.com.
+                </a>
+              </p>
+            </div>
+            <div>
+              <FAQs />
             </div>
           </div>
         </div>
