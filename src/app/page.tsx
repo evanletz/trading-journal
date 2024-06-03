@@ -399,7 +399,7 @@ export default async function Home() {
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
           <div className="mx-auto max-w-screen-md text-center items-center justify-center">
             <h2 className="mb-4 text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-              Ready to become a better trader?
+              Ready to elevate your trading?
             </h2>
             <GetStarted />
           </div>

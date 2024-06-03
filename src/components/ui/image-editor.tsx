@@ -344,6 +344,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                               }}
                               key={field.id}
                               className="text-base"
+                              placeholder="What was going through your mind at this point in the trade?"
                             />
                           </div>
                         </div>
