@@ -1,19 +1,18 @@
 "use client";
 
 import HowToAccordion from "@/components/ui/how-to";
-import { Button } from "@/components/ui/button";
 import FeaturesTooltip from "@/components/ui/tooltip";
 import { GetStartedButton } from "@/components/upgrade-button";
-import Link from "next/link";
 import FAQs from "@/components/ui/faqs";
+import GetStarted from "@/components/ui/get-started";
 
 export default async function Home() {
   return (
-    <main>
+    <main className="space-y-8 sm:space-y-0">
       <section>
         <div className="max-w-screen-xl -mt-8 md:-mt-4 px-4 pb-8 mx-auto lg:pb-16 sm:gap-8 xl:gap-0 lg:grid-cols-12">
           <div className="flex flex-col mr-auto items-center lg:col-span-7">
-            <h1 className="text-center max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+            <h1 className="text-center max-w-2xl mb-4 font-extrabold tracking-tight leading-none text-3xl md:text-5xl dark:text-white">
               The simplest way to<br></br>track your trades
             </h1>
             <p className="text-center max-w-xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
@@ -83,34 +82,15 @@ export default async function Home() {
                 Become a better trader
               </p>
             </div>
-            <Button
-              asChild
-              className="bg-green-500 inline-flex items-center justify-center px-5 py-3 mr-3 mt-6 lg:mt-8 text-base font-medium text-center rounded-lg</Link> hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
-            >
-              <Link href="#pricing">
-                Get started
-                <svg
-                  className="w-5 h-5 ml-2 -mr-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </Link>
-            </Button>
+            <GetStarted />
           </div>
         </div>
       </section>
       <section className="bg-white dark:bg-gray-900 rounded">
         <div className="flex items-center justify-center py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
           <div className="text-center max-w-screen-lg text-gray-500 sm:text-lg dark:text-gray-400">
-            <h2 className="mb-8 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">
-              Keep trade tracking simple
+            <h2 className="mb-8 text-3xl md:text-5xl tracking-tight font-bold text-gray-900 dark:text-white">
+              Keep trade tracking easy
             </h2>
             <p className="mb-4 font-medium">Most trade journals have:</p>
             <p className="mb-4 font-light flex items-center justify-center gap-1">
@@ -176,13 +156,12 @@ export default async function Home() {
       <section>
         <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
           <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-              Get intimate with each trade
+            <h2 className="mb-4 text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+              Get intimate with your trades
             </h2>
             <p className="text-gray-500 sm:text-xl dark:text-gray-400">
               The only way to improve your trading is to truly understand each
-              trade you take. Don't settle for the automated import-and-forget
-              approach of other journals.
+              trade you take.
             </p>
           </div>
           <HowToAccordion />
@@ -191,8 +170,8 @@ export default async function Home() {
       <section id="pricing" className="bg-white dark:bg-gray-900 rounded">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
           <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-              No-hassle trade journaling is here
+            <h2 className="mb-4 text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+              Effective trade journaling is here
             </h2>
             <p className="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">
               Ditch the complicated journals and focus on what you love to do:
@@ -366,7 +345,7 @@ export default async function Home() {
                           clipRule="evenodd"
                         ></path>
                       </svg>
-                      <span className="font-bold">Unlimited</span> journal
+                      <span className="font-bold">Unlimited</span>journal
                       entries
                     </p>
                   </li>
@@ -397,21 +376,32 @@ export default async function Home() {
       </section>
       <section>
         <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
-          <div className="mx-auto max-w-screen-md grid grid-cols-1 sm:grid-cols-2 mb-16 sm:mb-8 lg:mb-16">
-            <div className="mb-8">
-              <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+          <div className="mx-auto max-w-screen-md grid grid-cols-1 sm:grid-cols-2">
+            <div className="mb-8 sm:mb-0">
+              <h2 className="mb-4 text-center sm:text-left text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
                 Frequently Asked Questions
               </h2>
               <p>
                 Have other questions? Send me an email at{" "}
                 <a href="mailto:evan@tradetrender.com" className="underline">
-                  evan@tradetrender.com.
+                  evan@tradetrender.com
                 </a>
+                .
               </p>
             </div>
             <div>
               <FAQs />
             </div>
+          </div>
+        </div>
+      </section>
+      <section id="pricing" className="bg-white dark:bg-gray-900 rounded">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+          <div className="mx-auto max-w-screen-md text-center items-center justify-center">
+            <h2 className="mb-4 text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+              Ready to become a better trader?
+            </h2>
+            <GetStarted />
           </div>
         </div>
       </section>

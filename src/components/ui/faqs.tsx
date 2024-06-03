@@ -7,7 +7,7 @@ import {
 
 export default function FAQs() {
   return (
-    <div className="-mb-24">
+    <div>
       <Accordion type="single" collapsible>
         <AccordionItem value="q-1">
           <AccordionTrigger className="data-[state=open]:text-green-500 text-left">
