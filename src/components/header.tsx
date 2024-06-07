@@ -35,25 +35,27 @@ export function Header() {
     <div className="border-b mb-16">
       <div className="h-16 container flex justify-between items-center">
         <div className="w-48 justify-start">
-          <div className="hidden dark:block">
-            <Link href="/">
-              <Image
-                src="/TradeTrenderLogo-light.png"
-                alt="Trade Trender Logo"
-                width="210"
-                height="70"
-              ></Image>
-            </Link>
-          </div>
-          <div className="block dark:hidden">
-            <Link href="/">
-              <Image
-                src="/TradeTrenderLogo-dark.png"
-                alt="Trade Trender Logo"
-                width="210"
-                height="70"
-              ></Image>
-            </Link>
+          <div>
+            <SignedOut>
+              <Link href="/">
+                <Image
+                  src="/TradeTrenderLogo-light.png"
+                  alt="Trade Trender Logo"
+                  width="210"
+                  height="70"
+                ></Image>
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard">
+                <Image
+                  src="/TradeTrenderLogo-light.png"
+                  alt="Trade Trender Logo"
+                  width="210"
+                  height="70"
+                ></Image>
+              </Link>
+            </SignedIn>
           </div>
         </div>
 
