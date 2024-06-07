@@ -52,8 +52,8 @@ export default function FeaturesTooltip() {
           </svg>
         </TooltipTrigger>
         <TooltipContent>
+          <p>- Share entries to X/Twitter</p>
           <p>- Entry model checklist</p>
-          <p>- Multiple trading accounts</p>
           <p>- Advanced trade metrics</p>
           <p>... and much more!</p>
         </TooltipContent>
