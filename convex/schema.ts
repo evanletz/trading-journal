@@ -20,6 +20,7 @@ export default defineSchema({
   trades: defineTable({
     userId: v.string(),
     tradeDate: v.string(),
+    tradeDateClose: v.optional(v.string()),
     ticker: v.optional(v.string()),
     pnl: v.optional(v.float64()),
     description: v.optional(v.string()),

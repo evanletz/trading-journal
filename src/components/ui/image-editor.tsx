@@ -48,6 +48,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
 
   const formSchema = z.object({
     tradeDate: z.string().or(z.literal("")),
+    tradeDateClose: z.optional(z.string().or(z.literal(""))),
     ticker: z.optional(z.string().min(0).max(10)),
     pnl: z.optional(z.number()),
     description: z.optional(z.string().min(0).max(500)),
@@ -69,6 +70,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       tradeDate: props.trade?.tradeDate,
+      tradeDateClose: props.trade?.tradeDateClose,
       ticker: props.trade?.ticker,
       pnl: props.trade?.pnl || 0,
       description: props.trade?.description,
@@ -386,6 +388,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       const formSummaryData = new FormData(summaryForm);
                       const isFormValid = formSchema.safeParse({
                         tradeDate: formSummaryData.get("tradeDate") as string,
+                        tradeDateClose: formSummaryData.get(
+                          "tradeDateClose"
+                        ) as string,
                         ticker: formSummaryData.get("ticker") as string,
                         pnl: parseFloat(formSummaryData.get("pnl") as string),
                         description: formSummaryData.get(
@@ -399,6 +404,9 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           const formData = {
                             tradeDate: formSummaryData.get(
                               "tradeDate"
+                            ) as string,
+                            tradeDateClose: formSummaryData.get(
+                              "tradeDateClose"
                             ) as string,
                             ticker: formSummaryData.get("ticker") as string,
                             pnl: parseFloat(
@@ -456,15 +464,36 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       setImageA("");
                     }}
                   >
-                    <div className="mt-4">
-                      <Label htmlFor="tradeDate">Date</Label>
-                      <Input
-                        {...register(`tradeDate`)}
-                        id="tradeDate"
-                        type="datetime-local"
-                        required
-                        className="text-base"
-                      />
+                    <div className="flex gap-4 items-center mt-4">
+                      <div className="flex-auto">
+                        <Label htmlFor="tradeDate">Entry Date</Label>
+                        <Input
+                          {...register(`tradeDate`)}
+                          id="tradeDate"
+                          type="datetime-local"
+                          required
+                          className="text-base"
+                          onInput={(e) => {
+                            const tradeDateCloseElem = document.getElementById(
+                              "tradeDateClose"
+                            ) as HTMLInputElement;
+                            if (!tradeDateCloseElem.value) {
+                              tradeDateCloseElem.value = e.currentTarget.value;
+                            } else {
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="flex-auto">
+                        <Label htmlFor="tradeDateClose">Exit Date</Label>
+                        <Input
+                          {...register(`tradeDateClose`)}
+                          id="tradeDateClose"
+                          type="datetime-local"
+                          required
+                          className="text-base"
+                        />
+                      </div>
                     </div>
                     <div className="flex gap-4 items-center mt-4">
                       <div className="flex-auto">

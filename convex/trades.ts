@@ -7,6 +7,7 @@ import { getUser, getUserId } from "./util";
 export const createTrade = mutation({
     args: {
         tradeDate: v.string(),
+        tradeDateClose: v.optional(v.string()),
         ticker: v.optional(v.string()),
         pnl: v.optional(v.float64()),
         description: v.optional(v.string()),
@@ -45,6 +46,7 @@ export const createTrade = mutation({
         return await ctx.db.insert('trades', {
             userId: fullUser.userId,
             tradeDate: args.tradeDate,
+            tradeDateClose: args.tradeDateClose,
             ticker: args.ticker?.toUpperCase(),
             pnl: args.pnl,
             description: args.description,
@@ -59,6 +61,7 @@ export const updateTrade = mutation({
     args: {
         tradeId: v.id('trades'),
         tradeDate: v.string(),
+        tradeDateClose: v.optional(v.string()),
         ticker: v.optional(v.string()),
         pnl: v.optional(v.float64()),
         description: v.optional(v.string()),
@@ -86,6 +89,7 @@ export const updateTrade = mutation({
 
         return await ctx.db.patch(trade._id, {
             tradeDate: args.tradeDate,
+            tradeDateClose: args.tradeDateClose,
             ticker: args.ticker,
             pnl: args.pnl,
             description: args.description,
