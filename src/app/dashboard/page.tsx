@@ -128,7 +128,7 @@ function Trades() {
               <div className="mt-8 grid md:grid-cols-3 sm:grid-cols-2 gap-8">
                 {entries?.map((entry: TradesWithImageUrl) => {
                   return (
-                    <Card key={entry._id}>
+                    <Card key={entry._id} className="border border-slate-700">
                       <CardHeader className="items-center md:min-h-40 lg:min-h-56">
                         <Image
                           src={entry.imageUrl}
