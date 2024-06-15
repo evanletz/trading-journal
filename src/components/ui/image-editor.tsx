@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Info, Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
@@ -464,7 +464,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
                       setImageA("");
                     }}
                   >
-                    <div className="flex gap-4 items-center mt-4">
+                    <div className="flex flex-col sm:flex-row gap-4 items-center">
                       <div className="flex-auto">
                         <Label htmlFor="tradeDate">Entry Date</Label>
                         <Input
@@ -490,7 +490,6 @@ export const ImageEditor = (props: ImageEditorProps) => {
                           {...register(`tradeDateClose`)}
                           id="tradeDateClose"
                           type="datetime-local"
-                          required
                           className="text-base"
                         />
                       </div>
