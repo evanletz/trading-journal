@@ -46,8 +46,11 @@ function Page() {
         </h3>
         <br></br>
         <p>
-          Your use of Trade Trender is subject to Dev 22 LLC's Privacy Policy.
-          Please review our Privacy Policy, which also governs the Site and
+          Your use of Trade Trender is subject to Dev 22 LLC's{" "}
+          <a data-custom-class="link" href="/legal/privacypolicy">
+            <span style={{ color: "rgb(34, 197, 94)" }}>Privacy Policy</span>
+          </a>
+          . Please review our Privacy Policy, which also governs the Site and
           informs users of our data collection practices.
         </p>
         <br></br>
