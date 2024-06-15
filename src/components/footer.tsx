@@ -28,6 +28,20 @@ export function Footer() {
                   ></Image>
                 </Link>
               </div>
+              <div className="mt-4">
+                <a
+                  href="https://www.producthunt.com/posts/trade-trender?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-trade&#0045;trender"
+                  target="_blank"
+                >
+                  <img
+                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=463245&theme=light"
+                    alt="Trade&#0032;Trender - Interactive&#0032;trade&#0032;journaling | Product Hunt"
+                    style={{ width: "250px", height: "54px" }}
+                    width="250"
+                    height="54"
+                  />
+                </a>
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-12 sm:grid-cols-2">
