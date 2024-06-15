@@ -20,8 +20,8 @@ export default function FAQs() {
             </p>
             <br></br>
             <p>
-              Trade Trender is a super lightweight trading journal designed to
-              help you understand your mindset at each step of your trade.
+              Trade Trender is an interactive trading journal designed to help
+              you understand your mindset at each step of your trade.
             </p>
           </AccordionContent>
         </AccordionItem>

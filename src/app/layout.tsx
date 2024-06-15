@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Trade Trender",
-  description: "Lightweight trade journaling",
+  description: "Interactive trade journaling",
 };
 
 export default function RootLayout({
