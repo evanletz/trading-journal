@@ -46,7 +46,12 @@ export const pay = action({
       mode: "payment",
       success_url: `${domain}/create`,
       cancel_url: `${domain}`,
-      allow_promotion_codes: true,
+      // allow_promotion_codes: true,
+      discounts: [
+        {
+          coupon: process.env.LAUNCH_COUPON_ID
+        }
+      ]
     });
 
     return session.url!;
