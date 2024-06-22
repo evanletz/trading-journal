@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Info, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import {
   Card,
@@ -28,6 +28,8 @@ import { api } from "../../../convex/_generated/api";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { useUser } from "@clerk/clerk-react";
 import ScrollToTop from "./scroll-to-top";
+import ChooseIcon from "./icons";
+import { findIndex } from "lodash";
 
 type ImageEditorProps = {
   image: string;
@@ -104,10 +106,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
     setStickers([...stickers, { ...newSticker, ...{ x: x, y: y } }]);
   };
 
-  const handleStickerMouseDown = (
-    id: number,
-    e: React.MouseEvent<SVGSVGElement>
-  ) => {
+  const handleStickerMouseDown = (id: number, e: any) => {
     e.preventDefault(); // prevents the annoying highlighting
     setDraggingStickerId(id);
     const rect = e.currentTarget.getBoundingClientRect();
@@ -116,10 +115,7 @@ export const ImageEditor = (props: ImageEditorProps) => {
     setOffset({ offsetX, offsetY });
   };
 
-  const handleStickerTouchStart = (
-    id: number,
-    e: React.TouchEvent<SVGSVGElement>
-  ) => {
+  const handleStickerTouchStart = (id: number, e: any) => {
     e.preventDefault(); // prevents the annoying highlighting
     const touch = e.touches[0];
     setDraggingStickerId(id);
@@ -280,19 +276,14 @@ export const ImageEditor = (props: ImageEditorProps) => {
                 id={stickerId.toString()}
                 key={stickerId}
                 style={{ position: "absolute", left: `${x}%`, top: `${y}%` }}
+                onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
+                onTouchStart={(e) => handleStickerTouchStart(stickerId, e)}
               >
-                <Info
-                  strokeWidth={3}
-                  style={{
-                    cursor: "move",
-                    color: "black",
-                    fill: "white",
-                    border: "10",
-                    borderColor: "black",
-                  }}
-                  onMouseDown={(e) => handleStickerMouseDown(stickerId, e)}
-                  onTouchStart={(e) => handleStickerTouchStart(stickerId, e)}
-                />
+                {ChooseIcon(
+                  findIndex(stickers, (item) => {
+                    return item.stickerId == stickerId;
+                  })
+                )}
               </div>
             ))}
           </div>
