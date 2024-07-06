@@ -28,6 +28,13 @@ export const getUserById = query({
     }
 })
 
+export const getUserByEmail = query({
+    args: {email: v.string()},
+    handler: async (ctx, args) => {
+        return ctx.db.query('users').filter((q) => q.eq(q.field('email'), args.email)).first()
+    }
+})
+
 export const isUserSubscribed = async (ctx: QueryCtx | MutationCtx) => {
     const userId = await getUserId(ctx)
 
@@ -46,9 +53,10 @@ export const createUser = internalMutation({
         await ctx.db.insert("users", {
             userId: args.userId,
             email: args.email,
-            credits: FREE_CREDITS,
+            credits: UNLTD_CREDITS,
             currency: '$',
-            profileType: 'free'
+            profileType: 'unlimited',
+            subscriptionId: 'earlyuser_' + Math.random().toString(24).substring(2, 14)
         })
     }
 })
