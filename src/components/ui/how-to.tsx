@@ -7,7 +7,26 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 
-export default function HowToAccordion() {
+export default function HowToSection() {
+  return (
+    <section>
+      <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+        <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-16">
+          <h2 className="mb-4 text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+            A hands-on approach<br></br>to trade journaling
+          </h2>
+          <p className="text-gray-500 sm:text-xl dark:text-gray-400">
+            The only way to improve your trading is to truly understand each
+            trade you take.
+          </p>
+        </div>
+        <HowToAccordion />
+      </div>
+    </section>
+  );
+}
+
+function HowToAccordion() {
   const [step1, setStep1] = useState(false);
   const [step2, setStep2] = useState(true);
   const [step3, setStep3] = useState(true);

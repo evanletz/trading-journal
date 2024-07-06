@@ -5,7 +5,33 @@ import {
   AccordionTrigger,
 } from "./accordion";
 
-export default function FAQs() {
+export default function FAQSection() {
+  return (
+    <section>
+      <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+        <div className="mx-auto max-w-screen-md grid grid-cols-1 sm:grid-cols-2">
+          <div className="mb-8 sm:mb-0">
+            <h2 className="mb-4 text-center sm:text-left text-3xl md:text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+              Frequently Asked Questions
+            </h2>
+            <p>
+              Have other questions? Send me an email at{" "}
+              <a href="mailto:evan@tradetrender.com" className="underline">
+                evan@tradetrender.com
+              </a>
+              .
+            </p>
+          </div>
+          <div>
+            <FAQs />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQs() {
   return (
     <div>
       <Accordion type="single" collapsible>
@@ -44,12 +70,12 @@ export default function FAQs() {
         </AccordionItem>
         <AccordionItem value="q-3">
           <AccordionTrigger className="data-[state=open]:text-green-500 text-left">
-            Is Trade Trender a monthly subscription?
+            How much does Trade Trender cost?
           </AccordionTrigger>
           <AccordionContent>
             <p>
-              No, you get Trade Trender for a one-time fee and you'll keep your
-              trades forever.
+              For a limited time, Trade Trender is free for all users. Enjoy the
+              road to better trading!
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -82,7 +108,7 @@ export default function FAQs() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="q-6">
+        {/* <AccordionItem value="q-6">
           <AccordionTrigger className="data-[state=open]:text-green-500 text-left">
             Can I get a refund?
           </AccordionTrigger>
@@ -92,7 +118,7 @@ export default function FAQs() {
               be refunded.
             </p>
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
       </Accordion>
     </div>
   );
