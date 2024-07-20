@@ -151,7 +151,7 @@ export function Header() {
           <SignedOut>
             <NavigationMenu className="hidden sm:inline">
               <NavigationMenuList className="flex align-right">
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                   <Link href="#pricing" legacyBehavior passHref>
                     <NavigationMenuLink
                       className={navigationMenuTriggerStyle()}
@@ -159,7 +159,7 @@ export function Header() {
                       Pricing
                     </NavigationMenuLink>
                   </Link>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
               </NavigationMenuList>
             </NavigationMenu>
             <SignInButton mode="modal">
